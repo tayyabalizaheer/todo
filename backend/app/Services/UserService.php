@@ -3,17 +3,24 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class UserService
 {
+    protected UserRepository $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
     /**
      * Register a new user and generate token
      */
     public function register(array $data): array
     {
-        $user = User::create([
+        $user = $this->userRepository->create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
@@ -32,7 +39,7 @@ class UserService
      */
     public function login(string $email, string $password): array
     {
-        $user = User::where('email', $email)->first();
+        $user = $this->userRepository->findByEmail($email);
 
         if (!$user || !Hash::check($password, $user->password)) {
             throw ValidationException::withMessages([
