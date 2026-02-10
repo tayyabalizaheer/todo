@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTodoRequest;
 use App\Http\Requests\UpdateTodoRequest;
 use App\Http\Requests\ShareTodoRequest;
+use App\Http\Resources\TodoResource;
 use App\Services\TodoService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class TodoController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $todos,
+            'data' => TodoResource::collection($todos),
         ]);
     }
 
@@ -56,7 +57,7 @@ class TodoController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $todo,
+            'data' => new TodoResource($todo),
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserSearchResource;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $users,
+            'data' => UserSearchResource::collection(collect($users)),
         ]);
     }
 }
