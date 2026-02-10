@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 class TodoRepository
 {
 
-public function getUserTodos(int $userId, array $filters = []): Collection
+    public function getUserTodos(int $userId, array $filters = []): Collection
     {
         $query = Todo::where('owner_id', $userId);
 

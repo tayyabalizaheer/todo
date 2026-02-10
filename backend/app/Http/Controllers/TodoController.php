@@ -98,5 +98,39 @@ class TodoController extends Controller
         ]);
     }
 
+    public function complete(Request $request, int $id): JsonResponse
+    {
+        $todo = $this->todoService->markAsCompleted($id, $request->user()->id);
 
+        if (!$todo) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Todo not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Todo marked as completed',
+            'data' => $todo,
+        ]);
+    }
+
+    public function reopen(Request $request, int $id): JsonResponse
+    {
+        $todo = $this->todoService->markAsOpen($id, $request->user()->id);
+
+        if (!$todo) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Todo not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Todo reopened',
+            'data' => $todo,
+        ]);
+    }
 }

@@ -16,5 +16,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Todo CRUD routes
     Route::apiResource('todos', TodoController::class);
-    
+    // Additional routes for marking as completed and reopening
+    Route::post('/todos/{id}/complete', [TodoController::class, 'complete']);
+    Route::post('/todos/{id}/reopen', [TodoController::class, 'reopen']);
 });

@@ -71,5 +71,14 @@ class TodoService
         return $this->repository->delete($todo);
     }
 
+    public function markAsCompleted(int $id, int $userId): ?Todo
+    {
+        return $this->updateTodo($id, ['status' => 'completed'], $userId);
+    }
+
+    public function markAsOpen(int $id, int $userId): ?Todo
+    {
+        return $this->updateTodo($id, ['status' => 'open'], $userId);
+    }
     
 }
