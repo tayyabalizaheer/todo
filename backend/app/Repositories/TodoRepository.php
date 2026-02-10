@@ -126,6 +126,13 @@ class TodoRepository
             ->first();
     }
 
+    public function acceptShare(TodoShare $share): bool
+    {
+        return $share->update([
+            'accepted_at' => now(),
+        ]);
+    }
+
     public function getUserPermissionForTodo(int $todoId, int $userId): ?string
     {
         $todo = $this->findById($todoId);

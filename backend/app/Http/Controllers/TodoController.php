@@ -157,4 +157,22 @@ class TodoController extends Controller
             'data' => $result['share'],
         ], 201);
     }
+
+    public function accept(Request $request, int $id): JsonResponse
+    {
+        $result = $this->todoService->acceptSharedTodo($id, $request->user()->id);
+
+        if (!$result['success']) {
+            return response()->json([
+                'success' => false,
+                'message' => $result['message'],
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => $result['message'],
+            'data' => $result['share'],
+        ]);
+    }
 }

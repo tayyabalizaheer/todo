@@ -137,5 +137,35 @@ class TodoService
             'share' => $share,
         ];
     }
+
+    public function acceptSharedTodo(int $todoId, int $userId): array
+    {
+        // Find the share
+        $share = $this->repository->findExistingShare($todoId, $userId);
+
+        if (!$share) {
+            return [
+                'success' => false,
+                'message' => 'This todo is not shared with you.',
+            ];
+        }
+
+        // Check if already accepted
+        if ($share->accepted_at !== null) {
+            return [
+                'success' => false,
+                'message' => 'This todo has already been accepted.',
+            ];
+        }
+
+        // Accept the share
+        $this->repository->acceptShare($share);
+
+        return [
+            'success' => true,
+            'message' => 'Todo accepted successfully.',
+            'share' => $share->fresh(),
+        ];
+    }
     
 }

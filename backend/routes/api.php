@@ -24,4 +24,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/todos/{id}/complete', [TodoController::class, 'complete']);
     Route::post('/todos/{id}/reopen', [TodoController::class, 'reopen']);
     Route::post('/todos/{id}/share', [TodoController::class, 'share']);
+    Route::post('/todos/{id}/accept', [TodoController::class, 'accept']);
 });
