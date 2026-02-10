@@ -70,4 +70,16 @@ class UserService
     {
         return $user;
     }
+
+    /**
+     * Search users by email
+     */
+    public function searchUsers(string $searchTerm, int $limit = 10): array
+    {
+        if (empty(trim($searchTerm))) {
+            return [];
+        }
+
+        return $this->userRepository->searchByEmail($searchTerm, $limit);
+    }
 }

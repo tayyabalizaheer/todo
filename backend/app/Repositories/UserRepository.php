@@ -29,4 +29,16 @@ class UserRepository
     {
         return User::find($id);
     }
+
+    /**
+     * Search users by email (live search)
+     */
+    public function searchByEmail(string $searchTerm, int $limit = 10): array
+    {
+        return User::where('email', 'like', '%' . $searchTerm . '%')
+            ->select('name', 'email')
+            ->limit($limit)
+            ->get()
+            ->toArray();
+    }
 }
