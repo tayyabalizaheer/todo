@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTodoRequest;
 use App\Http\Requests\UpdateTodoRequest;
+use App\Http\Requests\ShareTodoRequest;
 use App\Services\TodoService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -132,5 +133,28 @@ class TodoController extends Controller
             'message' => 'Todo reopened',
             'data' => $todo,
         ]);
+    }
+
+    public function share(ShareTodoRequest $request, int $id): JsonResponse
+    {
+        $result = $this->todoService->shareTodo(
+            $id,
+            $request->validated()['email'],
+            $request->user()->id,
+            $request->validated()['permission'] ?? 'view'
+        );
+
+        if (!$result['success']) {
+            return response()->json([
+                'success' => false,
+                'message' => $result['message'],
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => $result['message'],
+            'data' => $result['share'],
+        ], 201);
     }
 }

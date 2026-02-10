@@ -31,4 +31,16 @@ class Todo extends Model
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
+    public function shares()
+    {
+        return $this->hasMany(TodoShare::class);
+    }
+
+    public function sharedWith()
+    {
+        return $this->belongsToMany(User::class, 'todo_shares', 'todo_id', 'shared_with_user_id')
+            ->withPivot('permission', 'accepted_at', 'shared_by_user_id')
+            ->withTimestamps();
+    }
 }

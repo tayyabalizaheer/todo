@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Todo;
+use App\Models\TodoShare;
 use Illuminate\Database\Eloquent\Collection;
 
 class TodoRepository
@@ -51,5 +52,22 @@ class TodoRepository
     public function findById(int $id): ?Todo
     {
         return Todo::find($id);
+    }
+
+    public function shareTodo(int $todoId, int $sharedWithUserId, int $sharedByUserId, string $permission = 'view'): TodoShare
+    {
+        return TodoShare::create([
+            'todo_id' => $todoId,
+            'shared_with_user_id' => $sharedWithUserId,
+            'shared_by_user_id' => $sharedByUserId,
+            'permission' => $permission,
+        ]);
+    }
+
+    public function findExistingShare(int $todoId, int $sharedWithUserId): ?TodoShare
+    {
+        return TodoShare::where('todo_id', $todoId)
+            ->where('shared_with_user_id', $sharedWithUserId)
+            ->first();
     }
 }
