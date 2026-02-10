@@ -22,12 +22,13 @@ class TodoService
 
     public function getUserTodos(int $userId, array $filters = []): Collection
     {
-        return $this->repository->getUserTodos($userId, $filters);
+        return $this->repository->getUserTodosIncludingShared($userId, $filters);
     }
 
     public function getTodo(int $id, int $userId): ?Todo
     {
-        return $this->repository->findByIdAndUser($id, $userId);
+        // Check if user can access this todo (owner or shared with any permission)
+        return $this->repository->findTodoWithAccess($id, $userId);
     }
 
     public function createTodo(array $data, int $userId): Todo
@@ -44,7 +45,8 @@ class TodoService
 
     public function updateTodo(int $id, array $data, int $userId): ?Todo
     {
-        $todo = $this->repository->findByIdAndUser($id, $userId);
+        // Check if user can edit this todo (owner, edit, or owner permission)
+        $todo = $this->repository->findTodoWithAccess($id, $userId, ['edit', 'owner']);
 
         if (!$todo) {
             return null;
@@ -66,7 +68,8 @@ class TodoService
  
     public function deleteTodo(int $id, int $userId): bool
     {
-        $todo = $this->repository->findByIdAndUser($id, $userId);
+        // Only owner can delete a todo
+        $todo = $this->repository->findTodoWithAccess($id, $userId, ['owner']);
 
         if (!$todo) {
             return false;

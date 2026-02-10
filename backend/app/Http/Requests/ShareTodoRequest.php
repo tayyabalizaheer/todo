@@ -23,7 +23,7 @@ class ShareTodoRequest extends FormRequest
     {
         return [
             'email' => 'required|email|exists:users,email',
-            'permission' => 'nullable|in:view,edit',
+            'permission' => 'nullable|in:view,edit,owner',
         ];
     }
 
