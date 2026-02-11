@@ -76,11 +76,11 @@ export class TodoService {
   }
 
   /**
-   * Share a todo with another user
+   * Share a todo with one or more users
    */
-  shareTodo(todoId: number, email: string, permission: 'view' | 'edit' | 'owner' = 'view'): Observable<{ success: boolean; message: string; data?: any }> {
-    return this.http.post<{ success: boolean; message: string; data?: any }>(`${this.apiUrl}/${todoId}/share`, {
-      email,
+  shareTodo(todoId: number, emails: string[], permission: 'view' | 'edit' | 'owner' = 'view'): Observable<{ success: boolean; message: string; data?: any; errors?: any }> {
+    return this.http.post<{ success: boolean; message: string; data?: any; errors?: any }>(`${this.apiUrl}/${todoId}/share`, {
+      emails,
       permission
     });
   }

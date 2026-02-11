@@ -395,6 +395,10 @@
   background: #dbeafe;
 }
 
+.share-btn:hover {
+  background: #e0e7ff;
+}
+
 .delete-btn:hover {
   background: #fee2e2;
 }

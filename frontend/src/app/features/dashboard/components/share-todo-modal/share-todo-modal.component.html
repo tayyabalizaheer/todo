@@ -1,0 +1,171 @@
+<div
+  *ngIf="isOpen"
+  class="modal-overlay"
+  (click)="onBackdropClick($event)"
+>
+  <div class="modal-container">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <h2 class="modal-title">Share Todo</h2>
+      <button
+        type="button"
+        class="close-button"
+        (click)="onClose()"
+        [disabled]="isSubmitting"
+        aria-label="Close modal"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <!-- Todo Title -->
+      <div class="todo-title-section">
+        <p class="todo-title">{{ todoTitle }}</p>
+      </div>
+
+      <!-- Search Input -->
+      <div class="search-section">
+        <label for="email-search" class="search-label">Search users by email</label>
+        <div class="search-input-wrapper">
+          <input
+            id="email-search"
+            type="text"
+            class="search-input"
+            placeholder="Enter email address (min. 2 characters)"
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="onSearchQueryChange()"
+            [disabled]="isSubmitting"
+            autocomplete="off"
+          />
+          <div *ngIf="isSearching" class="search-spinner">
+            <svg class="spinner-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Search Results -->
+        <div *ngIf="searchResults.length > 0" class="search-results">
+          <div
+            *ngFor="let user of searchResults"
+            class="search-result-item"
+            (click)="onSelectUser(user)"
+          >
+            <div class="user-info">
+              <div class="user-avatar">{{ user.name.charAt(0).toUpperCase() }}</div>
+              <div class="user-details">
+                <p class="user-name">{{ user.name }}</p>
+                <p class="user-email">{{ user.email }}</p>
+              </div>
+            </div>
+            <button type="button" class="add-button">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- No Results Message -->
+        <div *ngIf="searchQuery.length >= 2 && searchResults.length === 0 && !isSearching" class="no-results">
+          <p>No users found</p>
+        </div>
+
+        <!-- Search Hint -->
+        <div *ngIf="searchQuery.length > 0 && searchQuery.length < 2" class="search-hint">
+          <p>Type at least 2 characters to search</p>
+        </div>
+      </div>
+
+      <!-- Selected Users -->
+      <div *ngIf="selectedUsers.length > 0" class="selected-users-section">
+        <label class="selected-label">Selected users ({{ selectedUsers.length }})</label>
+        <div class="selected-users-list">
+          <div
+            *ngFor="let user of selectedUsers"
+            class="selected-user-chip"
+          >
+            <div class="chip-avatar">{{ user.name.charAt(0).toUpperCase() }}</div>
+            <span class="chip-name">{{ user.name }}</span>
+            <span class="chip-email">({{ user.email }})</span>
+            <button
+              type="button"
+              class="chip-remove-button"
+              (click)="onRemoveUser(user)"
+              [disabled]="isSubmitting"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Permission Selection -->
+      <div *ngIf="selectedUsers.length > 0" class="permission-section">
+        <label class="permission-label">Permission</label>
+        <div class="permission-options">
+          <label class="permission-option">
+            <input
+              type="radio"
+              name="permission"
+              value="view"
+              [(ngModel)]="permission"
+              [disabled]="isSubmitting"
+            />
+            <div class="permission-content">
+              <span class="permission-title">View Only</span>
+              <span class="permission-description">Can view the todo</span>
+            </div>
+          </label>
+          <label class="permission-option">
+            <input
+              type="radio"
+              name="permission"
+              value="edit"
+              [(ngModel)]="permission"
+              [disabled]="isSubmitting"
+            />
+            <div class="permission-content">
+              <span class="permission-title">Can Edit</span>
+              <span class="permission-description">Can view and edit the todo</span>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="onClose()"
+        [disabled]="isSubmitting"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="onShare()"
+        [disabled]="isSubmitting || selectedUsers.length === 0"
+      >
+        <span *ngIf="!isSubmitting">Share</span>
+        <span *ngIf="isSubmitting" class="button-loading">
+          <svg class="spinner-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Sharing...
+        </span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -146,24 +146,57 @@ class TodoController extends Controller
 
     public function share(ShareTodoRequest $request, int $id): JsonResponse
     {
-        $result = $this->todoService->shareTodo(
-            $id,
-            $request->validated()['email'],
-            $request->user()->id,
-            $request->validated()['permission'] ?? 'view'
-        );
+        $validated = $request->validated();
+        $permission = $validated['permission'] ?? 'view';
+        
+        // Handle both single email and multiple emails
+        $emails = [];
+        if (isset($validated['emails'])) {
+            $emails = $validated['emails'];
+        } elseif (isset($validated['email'])) {
+            $emails = [$validated['email']];
+        }
 
-        if (!$result['success']) {
+        $results = [];
+        $errors = [];
+        
+        foreach ($emails as $email) {
+            $result = $this->todoService->shareTodo(
+                $id,
+                $email,
+                $request->user()->id,
+                $permission
+            );
+
+            if ($result['success']) {
+                $results[] = $result['share'];
+            } else {
+                $errors[] = [
+                    'email' => $email,
+                    'message' => $result['message']
+                ];
+            }
+        }
+
+        // If all failed, return error
+        if (empty($results)) {
             return response()->json([
                 'success' => false,
-                'message' => $result['message'],
+                'message' => 'Failed to share with any users',
+                'errors' => $errors,
             ], 400);
         }
 
+        // If some succeeded, return success with details
+        $message = count($emails) === 1 
+            ? 'Todo shared successfully'
+            : sprintf('Todo shared with %d out of %d users', count($results), count($emails));
+
         return response()->json([
             'success' => true,
-            'message' => $result['message'],
-            'data' => $result['share'],
+            'message' => $message,
+            'data' => $results,
+            'errors' => !empty($errors) ? $errors : null,
         ], 201);
     }
 

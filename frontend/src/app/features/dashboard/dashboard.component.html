@@ -3,6 +3,7 @@
   isLoading: isLoading$ | async,
   error: error$ | async,
   isSubmittingTodo: isSubmittingTodo$ | async,
+  isSubmittingShare: isSubmittingShare$ | async,
   activeTodosCount: activeTodosCount$ | async,
   completedTodosCount: completedTodosCount$ | async
 } as vm">
@@ -172,6 +173,9 @@
               </button>
             }
             @if (canDelete(todo)) {
+              <button class="action-btn share-btn" (click)="openShareModal(todo)" title="Share">
+                👥
+              </button>
               <button class="action-btn delete-btn" (click)="deleteTodo(todo)" title="Delete">
                 🗑️
               </button>
@@ -191,4 +195,13 @@
   (close)="closeModal()"
   (submit)="onSubmitTodo($event)"
 ></app-todo-modal>
+
+<!-- Share Todo Modal -->
+<app-share-todo-modal
+  [isOpen]="isShareModalOpen"
+  [todoTitle]="sharingTodo?.title || ''"
+  [isSubmitting]="vm.isSubmittingShare || false"
+  (close)="closeShareModal()"
+  (share)="onShareTodo($event)"
+></app-share-todo-modal>
 </ng-container>

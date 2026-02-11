@@ -6,11 +6,12 @@ import { Subject, BehaviorSubject, Observable, takeUntil, debounceTime, distinct
 import { TodoService } from '../../core/services/todo.service';
 import { Todo, CreateTodoRequest, UpdateTodoRequest } from '../../core/models/todo.model';
 import { TodoModalComponent } from './components/todo-modal/todo-modal.component';
+import { ShareTodoModalComponent } from './components/share-todo-modal/share-todo-modal.component';
 import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, FormsModule, TodoModalComponent],
+  imports: [CommonModule, FormsModule, TodoModalComponent, ShareTodoModalComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -35,6 +36,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   filterStatus: 'all' | 'active' | 'completed' = 'all';
   isModalOpen = false;
   editingTodo?: Todo;
+  
+  // Share modal state
+  isShareModalOpen = false;
+  sharingTodo?: Todo;
+  private isSubmittingShareSubject$ = new BehaviorSubject<boolean>(false);
+  isSubmittingShare$ = this.isSubmittingShareSubject$.asObservable();
   
   // Computed observables
   activeTodosCount$ = this.todos$.pipe(
@@ -308,6 +315,47 @@ export class DashboardComponent implements OnInit, OnDestroy {
           console.error('Error updating todo:', error);
           this.errorSubject$.next(error.error?.message || 'Failed to update todo');
           this.isSubmittingTodoSubject$.next(false);
+        }
+      });
+  }
+  
+  openShareModal(todo: Todo): void {
+    this.sharingTodo = todo;
+    this.isShareModalOpen = true;
+  }
+  
+  closeShareModal(): void {
+    this.isShareModalOpen = false;
+    this.sharingTodo = undefined;
+    this.isSubmittingShareSubject$.next(false);
+    this.cdr.markForCheck();
+  }
+  
+  onShareTodo(data: { emails: string[], permission: string }): void {
+    if (!this.sharingTodo) return;
+    
+    this.isSubmittingShareSubject$.next(true);
+    this.errorSubject$.next(null);
+
+    this.todoService.shareTodo(this.sharingTodo.id, data.emails, data.permission as 'view' | 'edit')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.isSubmittingShareSubject$.next(false);
+          this.closeShareModal();
+          
+          // Show success message
+          if (response.errors && response.errors.length > 0) {
+            alert(`${response.message}\n\nFailed to share with:\n${response.errors.map((e: any) => `- ${e.email}: ${e.message}`).join('\n')}`);
+          } else {
+            alert(response.message || 'Todo shared successfully!');
+          }
+        },
+        error: (error) => {
+          console.error('Error sharing todo:', error);
+          this.errorSubject$.next(error.error?.message || 'Failed to share todo');
+          this.isSubmittingShareSubject$.next(false);
+          alert(error.error?.message || 'Failed to share todo');
         }
       });
   }
