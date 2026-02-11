@@ -25,7 +25,8 @@ class UserController extends Controller
 
         $users = $this->userService->searchUsers(
             $request->query('email'),
-            $request->query('limit', 10)
+            $request->query('limit', 10),
+            $request->user()->id
         );
 
         return response()->json([

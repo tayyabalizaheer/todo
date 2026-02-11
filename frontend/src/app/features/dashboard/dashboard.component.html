@@ -88,14 +88,6 @@
       <p>Loading your todos...</p>
     </div>
   } 
-  <!-- Error State -->
-  @else if (vm.error) {
-    <div class="error-alert">
-      <span class="error-icon">⚠️</span>
-      <span>{{ vm.error }}</span>
-      <button (click)="loadTodos()" class="retry-btn">Retry</button>
-    </div>
-  }
 
   <!-- Todos List -->
   @else if (!vm.todos || vm.todos.length === 0) {

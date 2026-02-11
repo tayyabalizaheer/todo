@@ -33,10 +33,15 @@ class UserRepository
     /**
      * Search users by email (live search)
      */
-    public function searchByEmail(string $searchTerm, int $limit = 10): array
+    public function searchByEmail(string $searchTerm, int $limit = 10, ?int $excludeUserId = null): array
     {
-        return User::where('email', 'like', '%' . $searchTerm . '%')
-            ->select('name', 'email')
+        $query = User::where('email', 'like', '%' . $searchTerm . '%');
+        
+        if ($excludeUserId !== null) {
+            $query->where('id', '!=', $excludeUserId);
+        }
+        
+        return $query->select('name', 'email')
             ->limit($limit)
             ->get()
             ->all();

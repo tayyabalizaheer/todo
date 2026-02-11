@@ -137,6 +137,19 @@
               <span class="permission-description">Can view and edit the todo</span>
             </div>
           </label>
+          <label class="permission-option">
+            <input
+              type="radio"
+              name="permission"
+              value="owner"
+              [(ngModel)]="permission"
+              [disabled]="isSubmitting"
+            />
+            <div class="permission-content">
+              <span class="permission-title">Owner</span>
+              <span class="permission-description">Can view, edit, and delete the todo</span>
+            </div>
+          </label>
         </div>
       </div>
     </div>

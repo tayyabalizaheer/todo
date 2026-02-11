@@ -74,12 +74,12 @@ class UserService
     /**
      * Search users by email
      */
-    public function searchUsers(string $searchTerm, int $limit = 10): array
+    public function searchUsers(string $searchTerm, int $limit = 10, ?int $excludeUserId = null): array
     {
         if (empty(trim($searchTerm))) {
             return [];
         }
 
-        return $this->userRepository->searchByEmail($searchTerm, $limit);
+        return $this->userRepository->searchByEmail($searchTerm, $limit, $excludeUserId);
     }
 }
