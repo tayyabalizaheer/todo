@@ -5,8 +5,9 @@ namespace App\Listeners;
 use App\Events\TodoUpdated;
 use App\Services\NotificationService;
 use App\Models\User;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendTodoUpdatedNotification
+class SendTodoUpdatedNotification implements ShouldQueue
 {
     protected NotificationService $notificationService;
 

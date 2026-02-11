@@ -44,6 +44,16 @@ class NotificationController extends Controller
         ]);
     }
 
+    public function unreadCount(Request $request): JsonResponse
+    {
+        $unreadCount = $this->notificationService->getUnreadCount($request->user()->id);
+
+        return response()->json([
+            'success' => true,
+            'unread_count' => $unreadCount,
+        ]);
+    }
+
     public function markAsRead(Request $request, string $id): JsonResponse
     {
         $notification = $this->notificationService->getNotificationById($id, $request->user()->id);

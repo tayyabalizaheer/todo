@@ -5,8 +5,9 @@ namespace App\Listeners;
 use App\Events\TodoDeleted;
 use App\Services\NotificationService;
 use App\Models\User;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendTodoDeletedNotification
+class SendTodoDeletedNotification implements ShouldQueue
 {
     protected NotificationService $notificationService;
 

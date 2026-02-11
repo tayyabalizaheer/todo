@@ -27,6 +27,73 @@
       }
     </nav>
 
+    @if (isLoggedIn) {
+      <div class="notifications-container">
+        <button 
+          class="notification-bell" 
+          (click)="toggleNotifications()" 
+          [class.has-unread]="hasUnreadNotifications()"
+          aria-label="Notifications">
+          <span class="bell-icon">🔔</span>
+          @if (hasUnreadNotifications()) {
+            <span class="notification-badge">{{ unreadCount() }}</span>
+          }
+        </button>
+
+        @if (isNotificationsOpen) {
+          <div class="notifications-dropdown">
+            <div class="notifications-header">
+              <h3>Notifications</h3>
+              @if (hasUnreadNotifications()) {
+                <button class="mark-all-read" (click)="markAllAsRead($event)">
+                  Mark all as read
+                </button>
+              }
+            </div>
+
+            <div class="notifications-list">
+              @if (notifications().length === 0) {
+                <div class="no-notifications">
+                  <p>No notifications</p>
+                </div>
+              } @else {
+                @for (notification of notifications(); track notification.id) {
+                  <div 
+                    class="notification-item" 
+                    [class.unread]="!notification.read_at"
+                    (click)="navigateToTodo(notification)">
+                    <div class="notification-icon">
+                      {{ getNotificationIcon(notification.type) }}
+                    </div>
+                    <div class="notification-content">
+                      <p class="notification-message">{{ notification.data.message }}</p>
+                      <span class="notification-time">{{ getRelativeTime(notification.created_at) }}</span>
+                    </div>
+                    <div class="notification-actions">
+                      @if (!notification.read_at) {
+                        <button 
+                          class="mark-read-btn"
+                          (click)="markAsRead(notification, $event)"
+                          title="Mark as read">
+                          ✓
+                        </button>
+                      }
+                      <button 
+                        class="delete-btn"
+                        (click)="deleteNotification(notification.id, $event)"
+                        title="Delete">
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+
     <button class="menu-toggle" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen" aria-label="Toggle menu">
       <span class="hamburger" [class.open]="isMenuOpen"></span>
     </button>

@@ -4,8 +4,9 @@ namespace App\Listeners;
 
 use App\Events\TodoShareAccepted;
 use App\Services\NotificationService;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendTodoShareAcceptedNotification
+class SendTodoShareAcceptedNotification implements ShouldQueue
 {
     protected NotificationService $notificationService;
 
