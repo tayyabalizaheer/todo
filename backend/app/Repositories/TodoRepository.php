@@ -27,7 +27,7 @@ class TodoRepository
         return $query->orderBy('created_at', 'desc')->get();
     }
 
-    public function getUserTodosIncludingShared(int $userId, array $filters = []): Collection
+    public function getUserTodosIncludingShared(int $userId, array $filters = [])
     {
         // Get owned todos
         $ownedTodosQuery = Todo::where('owner_id', $userId);
@@ -61,10 +61,16 @@ class TodoRepository
             });
         }
 
-        $todos = $query->orderBy('created_at', 'desc')->get();
+        $query->orderBy('created_at', 'desc');
+
+        $perPage = $filters['per_page'] ?? 15;
+        if($perPage > 100) {
+            $perPage = 100; // Limit max per page to prevent abuse
+        }
+        $todos = $query->paginate($perPage);
 
         // Add sharing information to each todo
-        $todos->each(function ($todo) use ($userId) {
+        $todos->getCollection()->transform(function ($todo) use ($userId) {
             $share = $todo->shares->first();
             
             if ($share && $todo->owner_id !== $userId) {
@@ -77,6 +83,8 @@ class TodoRepository
             
             // Remove shares relationship from output to keep response clean
             unset($todo->shares);
+            
+            return $todo;
         });
 
         return $todos;

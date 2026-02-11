@@ -21,12 +21,20 @@ class TodoController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $filters = $request->only(['status', 'search']);
+        $filters = $request->only(['status', 'search', 'per_page']);
         $todos = $this->todoService->getUserTodos($request->user()->id, $filters);
 
         return response()->json([
             'success' => true,
-            'data' => TodoResource::collection($todos),
+            'data' => TodoResource::collection($todos->items()),
+            'pagination' => [
+                'current_page' => $todos->currentPage(),
+                'per_page' => $todos->perPage(),
+                'total' => $todos->total(),
+                'last_page' => $todos->lastPage(),
+                'from' => $todos->firstItem(),
+                'to' => $todos->lastItem(),
+            ],
         ]);
     }
 

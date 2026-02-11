@@ -6,6 +6,11 @@ use App\Repositories\TodoRepository;
 use App\Repositories\UserRepository;
 use App\Models\Todo;
 use App\Models\TodoShare;
+use App\Models\User;
+use App\Events\TodoShared;
+use App\Events\TodoShareAccepted;
+use App\Events\TodoUpdated;
+use App\Events\TodoDeleted;
 use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 
@@ -20,7 +25,7 @@ class TodoService
         $this->userRepository = $userRepository;
     }
 
-    public function getUserTodos(int $userId, array $filters = []): Collection
+    public function getUserTodos(int $userId, array $filters = [])
     {
         return $this->repository->getUserTodosIncludingShared($userId, $filters);
     }
@@ -60,7 +65,17 @@ class TodoService
             $data['completed_at'] = null;
         }
 
+        // Get all shared user IDs (who have accepted) before updating
+        $sharedUserIds = $todo->shares()
+            ->whereNotNull('accepted_at')
+            ->pluck('shared_with_user_id')
+            ->toArray();
+
         $this->repository->update($todo, $data);
+
+        // Fire TodoUpdated event for shared todos
+        $updatedBy = User::find($userId);
+        event(new TodoUpdated($todo->fresh(), $updatedBy, $sharedUserIds));
 
         return $todo->fresh();
     }
@@ -74,6 +89,13 @@ class TodoService
         if (!$todo) {
             return false;
         }
+
+        // Get all shared user IDs before deleting
+        $sharedUserIds = $todo->shares()->pluck('shared_with_user_id')->toArray();
+        
+        // Fire TodoDeleted event
+        $deletedBy = User::find($userId);
+        event(new TodoDeleted($todo, $deletedBy, $sharedUserIds));
 
         return $this->repository->delete($todo);
     }
@@ -131,6 +153,9 @@ class TodoService
         // Create the share
         $share = $this->repository->shareTodo($todoId, $sharedWithUser->id, $currentUserId, $permission);
 
+        // Fire TodoShared event
+        event(new TodoShared($todo, $share));
+
         return [
             'success' => true,
             'message' => 'Todo shared successfully.',
@@ -160,6 +185,10 @@ class TodoService
 
         // Accept the share
         $this->repository->acceptShare($share);
+
+        // Fire TodoShareAccepted event
+        $todo = $share->todo;
+        event(new TodoShareAccepted($todo, $share->fresh()));
 
         return [
             'success' => true,
