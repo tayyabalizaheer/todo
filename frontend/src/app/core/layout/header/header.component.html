@@ -2,13 +2,16 @@
   <div class="header-container">
     <div class="logo-section">
       <a routerLink="/" class="logo">
-        <img src="/logo.png" alt="Quick Task Logo" class="logo-icon">
+        <img src="/logo.png" [alt]="appName + ' Logo'" class="logo-icon">
       </a>
     </div>
 
     <nav class="nav-desktop">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
         Home
+      </a>
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+        Dashboard
       </a>
       <a routerLink="/auth/login" routerLinkActive="active" class="nav-link">
         Login
@@ -28,6 +31,10 @@
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" 
          class="nav-link-mobile" (click)="closeMenu()">
         Home
+      </a>
+      <a routerLink="/dashboard" routerLinkActive="active" 
+         class="nav-link-mobile" (click)="closeMenu()">
+        Dashboard
       </a>
       <a routerLink="/auth/login" routerLinkActive="active" 
          class="nav-link-mobile" (click)="closeMenu()">

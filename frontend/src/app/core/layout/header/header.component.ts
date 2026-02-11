@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -9,6 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
+  appName = environment.appName;
   isMenuOpen = false;
 
   toggleMenu(): void {

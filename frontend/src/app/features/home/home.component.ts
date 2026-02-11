@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -9,6 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
+  appName = environment.appName;
   features = [
     {
       icon: '✓',

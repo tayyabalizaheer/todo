@@ -1,0 +1,179 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">{{ appName }} Dashboard</h1>
+    <button class="btn btn-primary">
+      <span class="icon">+</span>
+      New Todo
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">📝</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ todos.length }}</div>
+        <div class="stat-label">Total Tasks</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">✓</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ completedTodosCount }}</div>
+        <div class="stat-label">Completed</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ activeTodosCount }}</div>
+        <div class="stat-label">Active</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="filters-section">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Search todos..."
+        class="search-input"
+      />
+    </div>
+
+    <div class="filter-buttons">
+      <button
+        [class.active]="filterStatus === 'all'"
+        (click)="onFilterChange('all')"
+        class="filter-btn"
+      >
+        All
+      </button>
+      <button
+        [class.active]="filterStatus === 'active'"
+        (click)="onFilterChange('active')"
+        class="filter-btn"
+      >
+        Active
+      </button>
+      <button
+        [class.active]="filterStatus === 'completed'"
+        (click)="onFilterChange('completed')"
+        class="filter-btn"
+      >
+        Completed
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading your todos...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error) {
+    <div class="error-alert">
+      <span class="error-icon">⚠️</span>
+      <span>{{ error }}</span>
+      <button (click)="loadTodos()" class="retry-btn">Retry</button>
+    </div>
+  }
+
+  <!-- Todos List -->
+   
+  @if (!isLoading && error === null) {
+    @if (filteredTodos.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <h3 class="empty-title">No todos found</h3>
+        <p class="empty-description">
+          @if (searchQuery) {
+            Try adjusting your search query
+          } @else if (filterStatus !== 'all') {
+            No {{ filterStatus }} todos at the moment
+          } @else {
+            Get started by creating your first todo!
+          }
+        </p>
+      </div>
+    } @else {
+      <div class="todos-list">
+        @for (todo of filteredTodos; track todo.id) {
+          <div class="todo-card" [class.completed]="todo.status === 'completed'">
+            <div class="todo-checkbox">
+              <input
+                type="checkbox"
+                [checked]="todo.status === 'completed'"
+                (change)="toggleComplete(todo)"
+                [disabled]="!canEdit(todo)"
+                [id]="'todo-' + todo.id"
+              />
+              <label [for]="'todo-' + todo.id"></label>
+            </div>
+
+            <div class="todo-content">
+              <div class="todo-header">
+                <h3 class="todo-title" [class.completed]="todo.status === 'completed'">
+                  {{ todo.title }}
+                </h3>
+                <div class="todo-badges">
+                  <span class="permission-badge" [class]="getPermissionBadge(todo)">
+                    {{ getPermissionBadge(todo) }}
+                  </span>
+                  @if (todo.due_at) {
+                    <span 
+                      class="due-date-badge"
+                      [class.due-today]="isDueToday(todo.due_at)"
+                      [class.overdue]="isOverdue(todo.due_at)"
+                    >
+                      📅 {{ formatDate(todo.due_at) }}
+                    </span>
+                  }
+                </div>
+              </div>
+
+              @if (todo.description) {
+                <p class="todo-description">{{ todo.description }}</p>
+              }
+
+              @if (todo.owner) {
+                <div class="todo-meta">
+                  <span class="owner-info">
+                    👤 {{ todo.owner.name }}
+                  </span>
+                  @if (todo.is_shared) {
+                    <span class="shared-info">
+                      👥 Shared
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="todo-actions">
+              @if (canEdit(todo)) {
+                <button class="action-btn edit-btn" title="Edit">
+                  ✏️
+                </button>
+              }
+              @if (canDelete(todo)) {
+                <button class="action-btn delete-btn" (click)="deleteTodo(todo)" title="Delete">
+                  🗑️
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

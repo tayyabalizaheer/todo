@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-footer',
@@ -9,6 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./footer.component.css']
 })
 export class FooterComponent {
+  appName = environment.appName;
   currentYear = new Date().getFullYear();
 
   footerLinks = {

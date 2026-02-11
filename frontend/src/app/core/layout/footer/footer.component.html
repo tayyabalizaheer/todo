@@ -4,7 +4,7 @@
       <!-- Brand Section -->
       <div class="footer-brand">
         <div class="brand-logo">
-          <img src="/logo.png" alt="Quick Task Logo" class="logo-icon">
+          <img src="/logo.png" [alt]="appName + ' Logo'" class="logo-icon">
         </div>
         <p class="brand-description">
           Your intelligent task management solution for personal and team productivity.
@@ -53,7 +53,7 @@
     <!-- Copyright -->
     <div class="footer-bottom">
       <p class="copyright">
-        © {{ currentYear }} Quick Task. All rights reserved.
+        © {{ currentYear }} {{ appName }}. All rights reserved.
       </p>
     </div>
   </div>
