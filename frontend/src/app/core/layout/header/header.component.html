@@ -10,15 +10,18 @@
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
         Home
       </a>
-      <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
-        Dashboard
-      </a>
-      <a routerLink="/auth/login" routerLinkActive="active" class="nav-link">
-        Login
-      </a>
-      <a routerLink="/auth/register" routerLinkActive="active" class="nav-link btn-primary">
-        Get Started
-      </a>
+      @if (isLoggedIn) {
+        <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+          Dashboard
+        </a>
+      } @else {
+        <a routerLink="/auth/login" routerLinkActive="active" class="nav-link">
+          Login
+        </a>
+        <a routerLink="/auth/register" routerLinkActive="active" class="nav-link btn-primary">
+          Get Started
+        </a>
+      }
     </nav>
 
     <button class="menu-toggle" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen" aria-label="Toggle menu">
@@ -32,18 +35,21 @@
          class="nav-link-mobile" (click)="closeMenu()">
         Home
       </a>
-      <a routerLink="/dashboard" routerLinkActive="active" 
-         class="nav-link-mobile" (click)="closeMenu()">
-        Dashboard
-      </a>
-      <a routerLink="/auth/login" routerLinkActive="active" 
-         class="nav-link-mobile" (click)="closeMenu()">
-        Login
-      </a>
-      <a routerLink="/auth/register" routerLinkActive="active" 
-         class="nav-link-mobile" (click)="closeMenu()">
-        Get Started
-      </a>
+      @if (isLoggedIn) {
+        <a routerLink="/dashboard" routerLinkActive="active" 
+           class="nav-link-mobile" (click)="closeMenu()">
+          Dashboard
+        </a>
+      } @else {
+        <a routerLink="/auth/login" routerLinkActive="active" 
+           class="nav-link-mobile" (click)="closeMenu()">
+          Login
+        </a>
+        <a routerLink="/auth/register" routerLinkActive="active" 
+           class="nav-link-mobile" (click)="closeMenu()">
+          Get Started
+        </a>
+      }
     </nav>
   }
 </header>

@@ -11,6 +11,6 @@ export const guestGuard: CanActivateFn = () => {
     return true;
   }
 
-  // Redirect authenticated users to home
-  return router.createUrlTree(['/']);
+  // Redirect authenticated users to dashboard
+  return router.createUrlTree(['/dashboard']);
 };
