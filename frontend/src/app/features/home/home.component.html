@@ -1,0 +1,62 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">Welcome to Quick Task</h1>
+      <p class="hero-subtitle">
+        Your intelligent task management solution for personal and team productivity
+      </p>
+      <div class="hero-actions">
+        <a routerLink="/auth/register" class="btn btn-primary">Get Started</a>
+        <a routerLink="/auth/login" class="btn btn-secondary">Sign In</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="section-header">
+      <h2 class="section-title">Powerful Features</h2>
+      <p class="section-description">
+        Everything you need to manage your tasks effectively
+      </p>
+    </div>
+
+    <div class="features-grid">
+      @for (feature of features; track feature.title) {
+        <div class="feature-card">
+          <div class="feature-icon">{{ feature.icon }}</div>
+          <h3 class="feature-title">{{ feature.title }}</h3>
+          <p class="feature-description">{{ feature.description }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="benefits-section">
+    <div class="section-header">
+      <h2 class="section-title">Why Choose Quick Task?</h2>
+    </div>
+
+    <div class="benefits-list">
+      @for (benefit of benefits; track benefit) {
+        <div class="benefit-item">
+          <span class="benefit-icon">✓</span>
+          <span class="benefit-text">{{ benefit }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h2 class="cta-title">Ready to boost your productivity?</h2>
+    <p class="cta-description">
+      Join thousands of users who trust Quick Task to manage their tasks efficiently
+    </p>
+    <a routerLink="/auth/register" class="btn btn-primary btn-large">
+      Start Free Today
+    </a>
+  </section>
+</div>

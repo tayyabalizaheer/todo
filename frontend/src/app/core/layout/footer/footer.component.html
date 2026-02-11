@@ -1,0 +1,60 @@
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-content">
+      <!-- Brand Section -->
+      <div class="footer-brand">
+        <div class="brand-logo">
+          <img src="/logo.png" alt="Quick Task Logo" class="logo-icon">
+        </div>
+        <p class="brand-description">
+          Your intelligent task management solution for personal and team productivity.
+        </p>
+        <div class="social-links">
+          @for (social of socialLinks; track social.label) {
+            <a [href]="social.url" target="_blank" rel="noopener noreferrer" 
+               [attr.aria-label]="social.label" class="social-link">
+              {{ social.icon }}
+            </a>
+          }
+        </div>
+      </div>
+
+      <!-- Links Sections -->
+      <div class="footer-links">
+        <div class="link-group">
+          <h3 class="link-group-title">Product</h3>
+          @for (link of footerLinks.product; track link.route) {
+            <a [routerLink]="link.route" class="footer-link">
+              {{ link.label }}
+            </a>
+          }
+        </div>
+
+        <div class="link-group">
+          <h3 class="link-group-title">Company</h3>
+          @for (link of footerLinks.company; track link.route) {
+            <a [routerLink]="link.route" class="footer-link">
+              {{ link.label }}
+            </a>
+          }
+        </div>
+
+        <div class="link-group">
+          <h3 class="link-group-title">Legal</h3>
+          @for (link of footerLinks.legal; track link.route) {
+            <a [routerLink]="link.route" class="footer-link">
+              {{ link.label }}
+            </a>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer-bottom text-center">
+      <p class="copyright">
+        © {{ currentYear }} Quick Task. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>

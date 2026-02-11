@@ -1,0 +1,42 @@
+<header class="header">
+  <div class="header-container">
+    <div class="logo-section">
+      <a routerLink="/" class="logo">
+        <img src="/logo.png" alt="Quick Task Logo" class="logo-icon">
+      </a>
+    </div>
+
+    <nav class="nav-desktop">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+        Home
+      </a>
+      <a routerLink="/auth/login" routerLinkActive="active" class="nav-link">
+        Login
+      </a>
+      <a routerLink="/auth/register" routerLinkActive="active" class="nav-link btn-primary">
+        Get Started
+      </a>
+    </nav>
+
+    <button class="menu-toggle" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen" aria-label="Toggle menu">
+      <span class="hamburger" [class.open]="isMenuOpen"></span>
+    </button>
+  </div>
+
+  @if (isMenuOpen) {
+    <nav class="nav-mobile">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" 
+         class="nav-link-mobile" (click)="closeMenu()">
+        Home
+      </a>
+      <a routerLink="/auth/login" routerLinkActive="active" 
+         class="nav-link-mobile" (click)="closeMenu()">
+        Login
+      </a>
+      <a routerLink="/auth/register" routerLinkActive="active" 
+         class="nav-link-mobile" (click)="closeMenu()">
+        Get Started
+      </a>
+    </nav>
+  }
+</header>
