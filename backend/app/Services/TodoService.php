@@ -33,7 +33,13 @@ class TodoService
     public function getTodo(int $id, int $userId): ?Todo
     {
         // Check if user can access this todo (owner or shared with any permission)
-        return $this->repository->findTodoWithAccess($id, $userId);
+        $todo = $this->repository->findTodoWithAccess($id, $userId);
+        
+        if (!$todo) {
+            return null;
+        }
+        
+        return $this->addSharingInfo($todo, $userId);
     }
 
     public function createTodo(array $data, int $userId): Todo
@@ -77,7 +83,7 @@ class TodoService
         $updatedBy = User::find($userId);
         event(new TodoUpdated($todo->fresh(), $updatedBy, $sharedUserIds));
 
-        return $todo->fresh();
+        return $this->addSharingInfo($todo->fresh(), $userId);
     }
 
  
@@ -197,4 +203,25 @@ class TodoService
         ];
     }
     
+    /**
+     * Add sharing information to a todo (owner, is_shared, permission)
+     */
+    private function addSharingInfo(Todo $todo, int $userId): Todo
+    {
+        // Check if this is a shared todo
+        $share = $todo->shares->where('shared_with_user_id', $userId)->first();
+        
+        if ($share && $todo->owner_id !== $userId) {
+            $todo->is_shared = true;
+            $todo->permission = $share->permission;
+        } else {
+            $todo->is_shared = false;
+            $todo->permission = 'owner';
+        }
+        
+        // Remove shares relationship from output to keep response clean
+        unset($todo->shares);
+        
+        return $todo;
+    }
 }

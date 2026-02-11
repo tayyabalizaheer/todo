@@ -164,7 +164,13 @@ class TodoRepository
 
     public function findTodoWithAccess(int $id, int $userId, array $requiredPermissions = []): ?Todo
     {
-        $todo = Todo::with(['owner:id,name,email', 'shares.sharedByUser:id,name,email'])->find($id);
+        $todo = Todo::with([
+            'owner:id,name,email',
+            'shares' => function ($q) use ($userId) {
+                $q->where('shared_with_user_id', $userId)
+                  ->with('sharedByUser:id,name,email');
+            }
+        ])->find($id);
         
         if (!$todo) {
             return null;
