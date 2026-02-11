@@ -148,14 +148,7 @@ class TodoController extends Controller
     {
         $validated = $request->validated();
         $permission = $validated['permission'] ?? 'view';
-        
-        // Handle both single email and multiple emails
-        $emails = [];
-        if (isset($validated['emails'])) {
-            $emails = $validated['emails'];
-        } elseif (isset($validated['email'])) {
-            $emails = [$validated['email']];
-        }
+        $emails = $validated['emails'];
 
         $results = [];
         $errors = [];

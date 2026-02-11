@@ -22,8 +22,7 @@ class ShareTodoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required_without:emails|email|exists:users,email',
-            'emails' => 'required_without:email|array|min:1',
+            'emails' => 'required|array|min:1',
             'emails.*' => 'email|exists:users,email',
             'permission' => 'nullable|in:view,edit,owner',
         ];
@@ -37,15 +36,12 @@ class ShareTodoRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required_without' => 'Email is required',
-            'email.email' => 'Email must be a valid email address',
-            'email.exists' => 'User with this email does not exist',
-            'emails.required_without' => 'At least one email is required',
+            'emails.required' => 'At least one email is required',
             'emails.array' => 'Emails must be an array',
             'emails.min' => 'At least one email is required',
             'emails.*.email' => 'All emails must be valid email addresses',
             'emails.*.exists' => 'One or more users with these emails do not exist',
-            'permission.in' => 'Permission must be either view or edit',
+            'permission.in' => 'Permission must be either view, edit, or owner',
         ];
     }
 }
