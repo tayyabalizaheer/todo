@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Notification;
-use App\Policies\NotificationPolicy;
+use App\Domains\Notification\Models\Notification;
+use App\Domains\Notification\Policies\NotificationPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
