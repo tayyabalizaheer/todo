@@ -39,6 +39,6 @@ class UserRepository
             ->select('name', 'email')
             ->limit($limit)
             ->get()
-            ->toArray();
+            ->all();
     }
 }

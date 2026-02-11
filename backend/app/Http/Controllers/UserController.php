@@ -20,11 +20,12 @@ class UserController extends Controller
     {
         $request->validate([
             'email' => 'required|string|min:2|max:255',
+            'limit' => 'sometimes|integer|min:1|max:100',
         ]);
 
         $users = $this->userService->searchUsers(
-            $request->input('email'),
-            $request->input('limit', 10)
+            $request->query('email'),
+            $request->query('limit', 10)
         );
 
         return response()->json([
