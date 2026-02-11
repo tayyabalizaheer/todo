@@ -1,31 +1,60 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, BehaviorSubject, Observable, takeUntil, debounceTime, distinctUntilChanged, switchMap, map } from 'rxjs';
 import { TodoService } from '../../core/services/todo.service';
-import { Todo } from '../../core/models/todo.model';
+import { Todo, CreateTodoRequest, UpdateTodoRequest } from '../../core/models/todo.model';
+import { TodoModalComponent } from './components/todo-modal/todo-modal.component';
 import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, TodoModalComponent],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   appName = environment.appName;
-  todos: Todo[] = [];
-  filteredTodos: Todo[] = [];
-  isLoading = false;
-  error: string | null = null;
+  
+  // Use BehaviorSubject for reactive state management
+  private todosSubject$ = new BehaviorSubject<Todo[]>([]);
+  todos$ = this.todosSubject$.asObservable();
+  
+  private isLoadingSubject$ = new BehaviorSubject<boolean>(false);
+  isLoading$ = this.isLoadingSubject$.asObservable();
+  
+  private errorSubject$ = new BehaviorSubject<string | null>(null);
+  error$ = this.errorSubject$.asObservable();
+  
+  private isSubmittingTodoSubject$ = new BehaviorSubject<boolean>(false);
+  isSubmittingTodo$ = this.isSubmittingTodoSubject$.asObservable();
+  
   searchQuery = '';
   filterStatus: 'all' | 'active' | 'completed' = 'all';
+  isModalOpen = false;
+  editingTodo?: Todo;
+  
+  // Computed observables
+  activeTodosCount$ = this.todos$.pipe(
+    map(todos => todos.filter(todo => todo.status === 'open').length)
+  );
+  
+  completedTodosCount$ = this.todos$.pipe(
+    map(todos => todos.filter(todo => todo.status === 'completed').length)
+  );
+  
   private destroy$ = new Subject<void>();
+  private searchSubject$ = new Subject<string>();
 
-  constructor(private todoService: TodoService) {}
+  constructor(
+    private todoService: TodoService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
+    this.setupSearchSubscription();
     this.loadTodos();
   }
 
@@ -34,63 +63,66 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  loadTodos(): void {
-    this.isLoading = true;
-    this.error = null;
-
-    this.todoService.getTodos({ per_page: 1000 })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response && response.data) {
-            this.todos = Array.isArray(response.data) ? response.data : [response.data];
-          } else {
-            this.todos = [];
-          }
-          this.applyFilters();
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error loading todos:', error);
-          this.error = error.error?.message || 'Failed to load todos';
-          this.isLoading = false;
-        },
-        complete: () => {
-          // Ensure loading state is always cleared
-          this.isLoading = false;
+  private setupSearchSubscription(): void {
+    this.searchSubject$
+      .pipe(
+        debounceTime(300), // Wait 300ms after user stops typing
+        distinctUntilChanged(), // Only emit if value changed
+        takeUntil(this.destroy$)
+      )
+      .subscribe(searchQuery => {
+        // Only search if query is 2+ characters or empty (to clear search)
+        if (searchQuery.length >= 2 || searchQuery.length === 0) {
+          this.loadTodos();
         }
       });
   }
 
-  applyFilters(): void {
-    let filtered = [...this.todos];
+  loadTodos(): void {
+    this.isLoadingSubject$.next(true);
+    this.errorSubject$.next(null);
 
-    // Filter by status
+    const params: any = { per_page: 100 };
+
+    // Add status filter if not 'all'
     if (this.filterStatus === 'active') {
-      filtered = filtered.filter(todo => todo.status === 'open');
+      params.status = 'open';
     } else if (this.filterStatus === 'completed') {
-      filtered = filtered.filter(todo => todo.status === 'completed');
+      params.status = 'completed';
     }
 
-    // Filter by search query
-    if (this.searchQuery.trim()) {
-      const query = this.searchQuery.toLowerCase();
-      filtered = filtered.filter(todo =>
-        todo.title.toLowerCase().includes(query) ||
-        todo.description?.toLowerCase().includes(query)
-      );
+    // Add search query if it's 2+ characters
+    if (this.searchQuery.trim().length >= 2) {
+      params.search = this.searchQuery.trim();
     }
 
-    this.filteredTodos = filtered;
+    this.todoService.getTodos(params)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response && response.data) {
+            const todos = Array.isArray(response.data) ? response.data : [response.data];
+            this.todosSubject$.next(todos);
+          } else {
+            this.todosSubject$.next([]);
+          }
+          this.isLoadingSubject$.next(false);
+        },
+        error: (error) => {
+          console.error('Error loading todos:', error);
+          this.errorSubject$.next(error.error?.message || 'Failed to load todos');
+          this.isLoadingSubject$.next(false);
+        }
+      });
   }
 
   onSearchChange(): void {
-    this.applyFilters();
+    this.searchSubject$.next(this.searchQuery);
   }
 
   onFilterChange(status: 'all' | 'active' | 'completed'): void {
     this.filterStatus = status;
-    this.applyFilters();
+    this.loadTodos();
   }
 
   toggleComplete(todo: Todo): void {
@@ -102,17 +134,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          // Update the todo in the list
-          const index = this.todos.findIndex(t => t.id === todo.id);
+          const currentTodos = this.todosSubject$.value;
+          const index = currentTodos.findIndex(t => t.id === todo.id);
           if (index !== -1) {
             const updatedTodo = Array.isArray(response.data) ? response.data[0] : response.data;
-            this.todos[index] = updatedTodo as Todo;
-            this.applyFilters();
+            // Create new array with immutable update
+            const newTodos = [
+              ...currentTodos.slice(0, index),
+              updatedTodo as Todo,
+              ...currentTodos.slice(index + 1)
+            ];
+            this.todosSubject$.next(newTodos);
           }
         },
         error: (error) => {
           console.error('Error toggling todo:', error);
-          this.error = error.error?.message || 'Failed to update todo';
+          this.errorSubject$.next(error.error?.message || 'Failed to update todo');
         }
       });
   }
@@ -126,13 +163,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          // Remove the todo from the list
-          this.todos = this.todos.filter(t => t.id !== todo.id);
-          this.applyFilters();
+          // Remove the todo from the list immutably
+          const currentTodos = this.todosSubject$.value;
+          const newTodos = currentTodos.filter(t => t.id !== todo.id);
+          this.todosSubject$.next(newTodos);
         },
         error: (error) => {
           console.error('Error deleting todo:', error);
-          this.error = error.error?.message || 'Failed to delete todo';
+          this.errorSubject$.next(error.error?.message || 'Failed to delete todo');
         }
       });
   }
@@ -147,14 +185,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   canDelete(todo: Todo): boolean {
     return todo.permission === 'owner';
-  }
-
-  get activeTodosCount(): number {
-    return this.todos.filter(todo => todo.status === 'open').length;
-  }
-
-  get completedTodosCount(): number {
-    return this.todos.filter(todo => todo.status === 'completed').length;
   }
 
   formatDate(date: string | null): string {
@@ -201,5 +231,84 @@ export class DashboardComponent implements OnInit, OnDestroy {
     todoDate.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
     return todoDate < today;
+  }
+
+  openCreateModal(): void {
+    this.editingTodo = undefined;
+    this.isModalOpen = true;
+  }
+
+  openEditModal(todo: Todo): void {
+    this.editingTodo = todo;
+    this.isModalOpen = true;
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+    this.editingTodo = undefined;
+    this.isSubmittingTodoSubject$.next(false);
+    this.cdr.markForCheck();
+  }
+
+  onSubmitTodo(todoData: CreateTodoRequest | UpdateTodoRequest): void {
+    if (this.editingTodo) {
+      this.updateTodo(this.editingTodo.id, todoData as UpdateTodoRequest);
+    } else {
+      this.createTodo(todoData as CreateTodoRequest);
+    }
+  }
+
+  private createTodo(todoData: CreateTodoRequest): void {
+    this.isSubmittingTodoSubject$.next(true);
+    this.errorSubject$.next(null);
+
+    this.todoService.createTodo(todoData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          const newTodo = Array.isArray(response.data) ? response.data[0] : response.data;
+          // Add new todo immutably at the beginning
+          const currentTodos = this.todosSubject$.value;
+          this.todosSubject$.next([newTodo as Todo, ...currentTodos]);
+          this.isSubmittingTodoSubject$.next(false);
+          this.closeModal();
+        },
+        error: (error) => {
+          console.error('Error creating todo:', error);
+          this.errorSubject$.next(error.error?.message || 'Failed to create todo');
+          this.isSubmittingTodoSubject$.next(false);
+        }
+      });
+  }
+
+  private updateTodo(id: number, todoData: UpdateTodoRequest): void {
+    this.isSubmittingTodoSubject$.next(true);
+    this.errorSubject$.next(null);
+
+    this.todoService.updateTodo(id, todoData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          const updatedTodo = Array.isArray(response.data) ? response.data[0] : response.data;
+          const currentTodos = this.todosSubject$.value;
+          const index = currentTodos.findIndex(t => t.id === id);
+          if (index !== -1) {
+            // Update todo immutably
+            const newTodos = [
+              ...currentTodos.slice(0, index),
+              updatedTodo as Todo,
+              ...currentTodos.slice(index + 1)
+            ];
+            this.todosSubject$.next(newTodos);
+          }
+          this.isSubmittingTodoSubject$.next(false);
+          this.closeModal();
+        },
+        error: (error) => {
+          console.error('Error updating todo:', error);
+          this.errorSubject$.next(error.error?.message || 'Failed to update todo');
+          this.isSubmittingTodoSubject$.next(false);
+        }
+      });
   }
 }

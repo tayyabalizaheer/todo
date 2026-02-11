@@ -1,8 +1,16 @@
+<ng-container *ngIf="{ 
+  todos: todos$ | async,
+  isLoading: isLoading$ | async,
+  error: error$ | async,
+  isSubmittingTodo: isSubmittingTodo$ | async,
+  activeTodosCount: activeTodosCount$ | async,
+  completedTodosCount: completedTodosCount$ | async
+} as vm">
 <div class="dashboard-container">
   <!-- Header -->
   <div class="dashboard-header">
     <h1 class="dashboard-title">{{ appName }} Dashboard</h1>
-    <button class="btn btn-primary">
+    <button class="btn btn-primary" (click)="openCreateModal()">
       <span class="icon">+</span>
       New Todo
     </button>
@@ -13,21 +21,21 @@
     <div class="stat-card">
       <div class="stat-icon">📝</div>
       <div class="stat-content">
-        <div class="stat-value">{{ todos.length }}</div>
+        <div class="stat-value">{{ vm.todos?.length || 0 }}</div>
         <div class="stat-label">Total Tasks</div>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon">✓</div>
       <div class="stat-content">
-        <div class="stat-value">{{ completedTodosCount }}</div>
+        <div class="stat-value">{{ vm.completedTodosCount || 0 }}</div>
         <div class="stat-label">Completed</div>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon">⏳</div>
       <div class="stat-content">
-        <div class="stat-value">{{ activeTodosCount }}</div>
+        <div class="stat-value">{{ vm.activeTodosCount || 0 }}</div>
         <div class="stat-label">Active</div>
       </div>
     </div>
@@ -72,108 +80,115 @@
   </div>
 
   <!-- Loading State -->
-  @if (isLoading) {
+ 
+   @if (vm.isLoading) {
     <div class="loading-state">
       <div class="spinner"></div>
       <p>Loading your todos...</p>
     </div>
-  }
-
+  } 
   <!-- Error State -->
-  @if (error) {
+  @else if (vm.error) {
     <div class="error-alert">
       <span class="error-icon">⚠️</span>
-      <span>{{ error }}</span>
+      <span>{{ vm.error }}</span>
       <button (click)="loadTodos()" class="retry-btn">Retry</button>
     </div>
   }
 
   <!-- Todos List -->
-   
-  @if (!isLoading && error === null) {
-    @if (filteredTodos.length === 0) {
-      <div class="empty-state">
-        <div class="empty-icon">📋</div>
-        <h3 class="empty-title">No todos found</h3>
-        <p class="empty-description">
-          @if (searchQuery) {
-            Try adjusting your search query
-          } @else if (filterStatus !== 'all') {
-            No {{ filterStatus }} todos at the moment
-          } @else {
-            Get started by creating your first todo!
-          }
-        </p>
-      </div>
-    } @else {
-      <div class="todos-list">
-        @for (todo of filteredTodos; track todo.id) {
-          <div class="todo-card" [class.completed]="todo.status === 'completed'">
-            <div class="todo-checkbox">
-              <input
-                type="checkbox"
-                [checked]="todo.status === 'completed'"
-                (change)="toggleComplete(todo)"
-                [disabled]="!canEdit(todo)"
-                [id]="'todo-' + todo.id"
-              />
-              <label [for]="'todo-' + todo.id"></label>
-            </div>
-
-            <div class="todo-content">
-              <div class="todo-header">
-                <h3 class="todo-title" [class.completed]="todo.status === 'completed'">
-                  {{ todo.title }}
-                </h3>
-                <div class="todo-badges">
-                  <span class="permission-badge" [class]="getPermissionBadge(todo)">
-                    {{ getPermissionBadge(todo) }}
-                  </span>
-                  @if (todo.due_at) {
-                    <span 
-                      class="due-date-badge"
-                      [class.due-today]="isDueToday(todo.due_at)"
-                      [class.overdue]="isOverdue(todo.due_at)"
-                    >
-                      📅 {{ formatDate(todo.due_at) }}
-                    </span>
-                  }
-                </div>
-              </div>
-
-              @if (todo.description) {
-                <p class="todo-description">{{ todo.description }}</p>
-              }
-
-              @if (todo.owner) {
-                <div class="todo-meta">
-                  <span class="owner-info">
-                    👤 {{ todo.owner.name }}
-                  </span>
-                  @if (todo.is_shared) {
-                    <span class="shared-info">
-                      👥 Shared
-                    </span>
-                  }
-                </div>
-              }
-            </div>
-
-            <div class="todo-actions">
-              @if (canEdit(todo)) {
-                <button class="action-btn edit-btn" title="Edit">
-                  ✏️
-                </button>
-              }
-              @if (canDelete(todo)) {
-                <button class="action-btn delete-btn" (click)="deleteTodo(todo)" title="Delete">
-                  🗑️
-                </button>
-              }
-            </div>
-          </div>
+  @else if (!vm.todos || vm.todos.length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">📋</div>
+      <h3 class="empty-title">No todos found</h3>
+      <p class="empty-description">
+        @if (searchQuery) {
+          Try adjusting your search query
+        } @else if (filterStatus !== 'all') {
+          No {{ filterStatus }} todos at the moment
+        } @else {
+          Get started by creating your first todo!
         }
-      </div>
-    }
+      </p>
+    </div>
+  } @else {
+    <div class="todos-list">
+      @for (todo of vm.todos; track todo.id) {
+        <div class="todo-card" [class.completed]="todo.status === 'completed'">
+          <div class="todo-checkbox">
+            <input
+              type="checkbox"
+              [checked]="todo.status === 'completed'"
+              (change)="toggleComplete(todo)"
+              [disabled]="!canEdit(todo)"
+              [id]="'todo-' + todo.id"
+            />
+            <label [for]="'todo-' + todo.id"></label>
+          </div>
+
+          <div class="todo-content">
+            <div class="todo-header">
+              <h3 class="todo-title" [class.completed]="todo.status === 'completed'">
+                {{ todo.title }}
+              </h3>
+              <div class="todo-badges">
+                <span class="permission-badge" [class]="getPermissionBadge(todo)">
+                  {{ getPermissionBadge(todo) }}
+                </span>
+                @if (todo.due_at) {
+                  <span 
+                    class="due-date-badge"
+                    [class.due-today]="isDueToday(todo.due_at)"
+                    [class.overdue]="isOverdue(todo.due_at)"
+                  >
+                    📅 {{ formatDate(todo.due_at) }}
+                  </span>
+                }
+              </div>
+            </div>
+
+            @if (todo.description) {
+              <p class="todo-description">{{ todo.description }}</p>
+            }
+
+            @if (todo.owner) {
+              <div class="todo-meta">
+                <span class="owner-info">
+                  👤 {{ todo.owner.name }}
+                </span>
+                @if (todo.is_shared) {
+                  <span class="shared-info">
+                    👥 Shared
+                  </span>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="todo-actions">
+            @if (canEdit(todo)) {
+              <button class="action-btn edit-btn" (click)="openEditModal(todo)" title="Edit">
+                ✏️
+              </button>
+            }
+            @if (canDelete(todo)) {
+              <button class="action-btn delete-btn" (click)="deleteTodo(todo)" title="Delete">
+                🗑️
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
   }
 </div>
+
+<!-- Todo Modal -->
+<app-todo-modal
+  [isOpen]="isModalOpen"
+  [todo]="editingTodo"
+  [isSubmitting]="vm.isSubmittingTodo || false"
+  (close)="closeModal()"
+  (submit)="onSubmitTodo($event)"
+></app-todo-modal>
+</ng-container>
