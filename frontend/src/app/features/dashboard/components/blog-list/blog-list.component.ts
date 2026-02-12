@@ -1,12 +1,13 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { Blog, BlogStatus } from '../../../../core/models/blog.model';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-blog-list',
   standalone: true,
-  imports: [CommonModule, DatePipe, IconComponent],
+  imports: [CommonModule, DatePipe, IconComponent, MatIconModule],
   templateUrl: './blog-list.component.html',
   styleUrls: ['./blog-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { BlogFormComponent } from '../blog-form/blog-form.component';
 import { CreateBlogRequest, UpdateBlogRequest, Blog } from '../../../../core/models/blog.model';
 
 @Component({
   selector: 'app-blog-modal',
   standalone: true,
-  imports: [CommonModule, BlogFormComponent],
+  imports: [CommonModule, BlogFormComponent, MatIconModule],
   templateUrl: './blog-modal.component.html',
   styleUrls: ['./blog-modal.component.css']
 })

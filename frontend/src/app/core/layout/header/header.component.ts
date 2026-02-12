@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, computed } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { environment } from '../../../../environments/environment';
 import { TokenStorageService } from '../../services/token-storage.service';
 import { AuthFacade } from '../../../features/auth/services/auth.facade';
@@ -10,7 +11,7 @@ import { Notification } from '../../models/notification.model';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, MatIconModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })

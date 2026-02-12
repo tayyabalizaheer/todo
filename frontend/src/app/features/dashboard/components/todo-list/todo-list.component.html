@@ -1,11 +1,10 @@
 <ng-container *ngIf="{ 
   todos: todos$ | async,
+  counts: counts$ | async,
   isLoading: isLoading$ | async,
   error: error$ | async,
   isSubmittingTodo: isSubmittingTodo$ | async,
-  isSubmittingShare: isSubmittingShare$ | async,
-  activeTodosCount: activeTodosCount$ | async,
-  completedTodosCount: completedTodosCount$ | async
+  isSubmittingShare: isSubmittingShare$ | async
 } as vm">
 <div class="todo-container">
   <!-- Header -->
@@ -22,21 +21,21 @@
     <div class="stat-card">
       <div class="stat-icon"><app-icon name="note" size="32" /></div>
       <div class="stat-content">
-        <div class="stat-value">{{ vm.todos?.length || 0 }}</div>
+        <div class="stat-value">{{ vm.counts?.all || 0 }}</div>
         <div class="stat-label">Total Tasks</div>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon"><app-icon name="checkmark" size="32" /></div>
       <div class="stat-content">
-        <div class="stat-value">{{ vm.completedTodosCount || 0 }}</div>
+        <div class="stat-value">{{ vm.counts?.completed || 0 }}</div>
         <div class="stat-label">Completed</div>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon"><app-icon name="clock" size="32" /></div>
       <div class="stat-content">
-        <div class="stat-value">{{ vm.activeTodosCount || 0 }}</div>
+        <div class="stat-value">{{ vm.counts?.active || 0 }}</div>
         <div class="stat-label">Active</div>
       </div>
     </div>

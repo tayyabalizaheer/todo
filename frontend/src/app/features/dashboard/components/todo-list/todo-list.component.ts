@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, BehaviorSubject, takeUntil, debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { TodoService } from '../../../../core/services/todo.service';
-import { Todo, CreateTodoRequest, UpdateTodoRequest } from '../../../../core/models/todo.model';
+import { Todo, CreateTodoRequest, UpdateTodoRequest, TodoCounts } from '../../../../core/models/todo.model';
 import { TodoModalComponent } from '../todo-modal/todo-modal.component';
 import { ShareTodoModalComponent } from '../share-todo-modal/share-todo-modal.component';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
@@ -21,6 +21,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
   private todosSubject$ = new BehaviorSubject<Todo[]>([]);
   todos$ = this.todosSubject$.asObservable();
   
+  private countsSubject$ = new BehaviorSubject<TodoCounts>({ all: 0, completed: 0, active: 0 });
+  counts$ = this.countsSubject$.asObservable();
+  
   private isLoadingSubject$ = new BehaviorSubject<boolean>(false);
   isLoading$ = this.isLoadingSubject$.asObservable();
   
@@ -32,15 +35,6 @@ export class TodoListComponent implements OnInit, OnDestroy {
   
   private isSubmittingShareSubject$ = new BehaviorSubject<boolean>(false);
   isSubmittingShare$ = this.isSubmittingShareSubject$.asObservable();
-  
-  // Computed observables
-  activeTodosCount$ = this.todos$.pipe(
-    map(todos => todos.filter(todo => todo.status === 'open').length)
-  );
-  
-  completedTodosCount$ = this.todos$.pipe(
-    map(todos => todos.filter(todo => todo.status === 'completed').length)
-  );
   
   searchQuery = '';
   filterStatus: 'all' | 'active' | 'completed' = 'all';
@@ -108,6 +102,12 @@ export class TodoListComponent implements OnInit, OnDestroy {
           } else {
             this.todosSubject$.next([]);
           }
+          
+          // Update counts from API response
+          if (response && response.counts) {
+            this.countsSubject$.next(response.counts);
+          }
+          
           this.isLoadingSubject$.next(false);
         },
         error: (error) => {

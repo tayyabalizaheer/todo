@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, signal } from '@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
 import { BlogService } from '../../../core/services/blog.service';
 import { Blog } from '../../../core/models/blog.model';
@@ -10,7 +11,7 @@ import { HttpErrorService } from '../../../core/services/http-error.service';
 @Component({
   selector: 'app-blog-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatIconModule],
   templateUrl: './blog-list.component.html',
   styleUrls: ['./blog-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

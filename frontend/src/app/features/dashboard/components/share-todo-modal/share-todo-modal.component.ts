@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Input, Output, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil, switchMap, of } from 'rxjs';
 import { UserService, UserSearchResult } from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-share-todo-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './share-todo-modal.component.html',
   styleUrls: ['./share-todo-modal.component.css']
 })

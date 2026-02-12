@@ -24,10 +24,12 @@ class TodoController extends Controller
     {
         $filters = $request->only(['status', 'search', 'per_page']);
         $todos = $this->todoService->getUserTodos($request->user()->id, $filters);
+        $counts = $this->todoService->getTodoCounts($request->user()->id);
 
         return response()->json([
             'success' => true,
             'data' => TodoResource::collection($todos->items()),
+            'counts' => $counts,
             'pagination' => [
                 'current_page' => $todos->currentPage(),
                 'per_page' => $todos->perPage(),

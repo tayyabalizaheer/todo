@@ -14,9 +14,7 @@
         [disabled]="isSubmitting"
         aria-label="Close modal"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
+        <mat-icon>close</mat-icon>
       </button>
     </div>
 
@@ -42,10 +40,7 @@
             autocomplete="off"
           />
           <div *ngIf="isSearching" class="search-spinner">
-            <svg class="spinner-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
+            <mat-icon class="spinner-icon">refresh</mat-icon>
           </div>
         </div>
 
@@ -64,9 +59,7 @@
               </div>
             </div>
             <button type="button" class="add-button">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
+              <mat-icon>add</mat-icon>
             </button>
           </div>
         </div>
@@ -99,9 +92,7 @@
               (click)="onRemoveUser(user)"
               [disabled]="isSubmitting"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <mat-icon>close</mat-icon>
             </button>
           </div>
         </div>
@@ -172,10 +163,7 @@
       >
         <span *ngIf="!isSubmitting">Share</span>
         <span *ngIf="isSubmitting" class="button-loading">
-          <svg class="spinner-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
+          <mat-icon class="spinner-icon">refresh</mat-icon>
           Sharing...
         </span>
       </button>

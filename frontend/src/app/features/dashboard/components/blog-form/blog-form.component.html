@@ -60,7 +60,7 @@
       <div class="image-preview" *ngIf="imagePreview">
         <img [src]="imagePreview" alt="Preview" />
         <button type="button" class="remove-image-btn" (click)="removeImage()" [disabled]="isSubmitting">
-          ✕
+          <mat-icon>close</mat-icon>
         </button>
       </div>
       
@@ -74,7 +74,7 @@
           [disabled]="isSubmitting"
         />
         <label for="featured_image" class="file-input-label">
-          <span class="upload-icon">📁</span>
+          <mat-icon class="upload-icon">upload_file</mat-icon>
           <span>Choose Image</span>
           <span class="file-hint">PNG, JPG, GIF up to 5MB</span>
         </label>

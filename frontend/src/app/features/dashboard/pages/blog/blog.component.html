@@ -6,7 +6,7 @@
         <p class="page-subtitle">Create, manage, and publish your blog content</p>
       </div>
       <button class="btn-create" (click)="openCreateModal()">
-        <span class="btn-icon">➕</span>
+        <mat-icon class="btn-icon">add</mat-icon>
         Create New Post
       </button>
     </div>
@@ -24,7 +24,7 @@
         class="search-input"
       />
       <button (click)="onSearch()" class="btn-search">
-        <span class="search-icon">🔍</span>
+        <mat-icon class="search-icon">search</mat-icon>
         Search
       </button>
     </div>
@@ -56,9 +56,9 @@
   <!-- Error Message -->
   @if (error$ | async; as error) {
     <div class="error-banner">
-      <span class="error-icon">⚠️</span>
+      <mat-icon class="error-icon">warning</mat-icon>
       <p class="error-text">{{ error }}</p>
-      <button class="error-close" (click)="dismissError()">✕</button>
+      <button class="error-close" (click)="dismissError()"><mat-icon>close</mat-icon></button>
     </div>
   }
 

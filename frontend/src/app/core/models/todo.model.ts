@@ -51,10 +51,17 @@ export interface UpdateTodoRequest {
   status?: 'open' | 'completed';
 }
 
+export interface TodoCounts {
+  all: number;
+  completed: number;
+  active: number;
+}
+
 export interface TodoApiResponse {
   success: boolean;
   data: Todo | Todo[];
   message?: string;
+  counts?: TodoCounts;
   pagination?: {
     current_page: number;
     per_page: number;

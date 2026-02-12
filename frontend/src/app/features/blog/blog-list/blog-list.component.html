@@ -17,9 +17,7 @@
         class="search-input"
         autocomplete="off"
       />
-      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-      </svg>
+      <mat-icon class="search-icon">search</mat-icon>
     </div>
   </div>
 
@@ -34,9 +32,7 @@
   <!-- Error State -->
   @if (error(); as errorMsg) {
     <div class="error-container" role="alert">
-      <svg class="error-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-      </svg>
+      <mat-icon class="error-icon">warning</mat-icon>
       <p class="error-text">{{ errorMsg }}</p>
       <button (click)="loadBlogs()" class="retry-btn" type="button">Try Again</button>
     </div>
@@ -66,23 +62,16 @@
             <p class="blog-excerpt">{{ truncateText(blog.excerpt, 150) }}</p>
             <div class="blog-meta">
               <span class="blog-author">
-                <svg class="author-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+                <mat-icon class="author-icon">person</mat-icon>
                 {{ blog.author.name }}
               </span>
               <span class="blog-date">
-                <svg class="date-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+                <mat-icon class="date-icon">event</mat-icon>
                 <time [attr.datetime]="blog.published_at">{{ formatDate(blog.published_at) }}</time>
               </span>
             </div>
             <div class="blog-views">
-              <svg class="views-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
+              <mat-icon class="views-icon">visibility</mat-icon>
               <span>{{ blog.views_count }} views</span>
             </div>
           </div>

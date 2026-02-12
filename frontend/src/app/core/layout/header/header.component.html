@@ -37,7 +37,7 @@
           (click)="toggleNotifications()" 
           [class.has-unread]="hasUnreadNotifications()"
           aria-label="Notifications">
-          <span class="bell-icon">🔔</span>
+          <mat-icon class="bell-icon">notifications</mat-icon>
           @if (hasUnreadNotifications()) {
             <span class="notification-badge">{{ unreadCount() }}</span>
           }
@@ -66,7 +66,7 @@
                     [class.unread]="!notification.read_at"
                     (click)="navigateToTodo(notification)">
                     <div class="notification-icon">
-                      {{ getNotificationIcon(notification.type) }}
+                      <mat-icon>{{ getNotificationIcon(notification.type) }}</mat-icon>
                     </div>
                     <div class="notification-content">
                       <p class="notification-message">{{ notification.data.message }}</p>
@@ -78,14 +78,14 @@
                           class="mark-read-btn"
                           (click)="markAsRead(notification, $event)"
                           title="Mark as read">
-                          ✓
+                          <mat-icon>check</mat-icon>
                         </button>
                       }
                       <button 
                         class="delete-btn"
                         (click)="deleteNotification(notification.id, $event)"
                         title="Delete">
-                        ×
+                        <mat-icon>close</mat-icon>
                       </button>
                     </div>
                   </div>

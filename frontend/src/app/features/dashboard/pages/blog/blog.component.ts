@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { environment } from '../../../../../environments/environment';
 import { Subject, BehaviorSubject, takeUntil, debounceTime, distinctUntilChanged, exhaustMap, finalize, tap } from 'rxjs';
 import { BlogService } from '../../../../core/services/blog.service';
@@ -12,7 +13,7 @@ import { HttpErrorService } from '../../../../core/services/http-error.service';
 @Component({
   selector: 'app-blog',
   standalone: true,
-  imports: [CommonModule, FormsModule, BlogListComponent, BlogModalComponent],
+  imports: [CommonModule, FormsModule, BlogListComponent, BlogModalComponent, MatIconModule],
   templateUrl: './blog.component.html',
   styleUrls: ['./blog.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

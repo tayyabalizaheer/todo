@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subject, takeUntil } from 'rxjs';
 import { BlogService } from '../../../core/services/blog.service';
@@ -10,7 +11,7 @@ import { HttpErrorService } from '../../../core/services/http-error.service';
 @Component({
   selector: 'app-blog-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MatIconModule],
   templateUrl: './blog-detail.component.html',
   styleUrls: ['./blog-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

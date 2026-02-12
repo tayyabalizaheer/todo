@@ -201,4 +201,33 @@ class TodoRepository
 
         return null;
     }
+
+    public function getTodoCounts(int $userId): array
+    {
+        // Get shared todo IDs
+        $sharedTodoIds = TodoShare::where('shared_with_user_id', $userId)
+            ->pluck('todo_id')
+            ->toArray();
+
+        // Base query for all accessible todos
+        $baseQuery = Todo::where(function ($q) use ($userId, $sharedTodoIds) {
+            $q->where('owner_id', $userId)
+                ->orWhereIn('id', $sharedTodoIds);
+        });
+
+        // Count all todos
+        $all = (clone $baseQuery)->count();
+
+        // Count completed todos
+        $completed = (clone $baseQuery)->where('status', 'completed')->count();
+
+        // Count active (open) todos
+        $active = (clone $baseQuery)->where('status', 'open')->count();
+
+        return [
+            'all' => $all,
+            'completed' => $completed,
+            'active' => $active,
+        ];
+    }
 }

@@ -142,15 +142,15 @@ export class NotificationService {
   getNotificationIcon(type: string): string {
     switch (type) {
       case 'todo_shared':
-        return '🔗';
+        return 'link';
       case 'todo_share_accepted':
-        return '✅';
+        return 'check_circle';
       case 'todo_updated':
-        return '✏️';
+        return 'edit';
       case 'todo_deleted':
-        return '🗑️';
+        return 'delete';
       default:
-        return '🔔';
+        return 'notifications';
     }
   }
 

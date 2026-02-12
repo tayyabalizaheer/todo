@@ -222,4 +222,9 @@ class TodoService
 
         return $todo;
     }
+
+    public function getTodoCounts(int $userId): array
+    {
+        return $this->repository->getTodoCounts($userId);
+    }
 }
