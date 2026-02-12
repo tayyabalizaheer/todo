@@ -44,7 +44,7 @@
       </select>
     </div>
 
-    @if (!(isLoading$ | async)) {
+    @if ((isLoading$ | async) === false) {
       <div class="results-info">
         <span class="results-count">
           {{ totalBlogs || 0 }} post{{ totalBlogs !== 1 ? 's' : '' }} found
@@ -75,7 +75,7 @@
   ></app-blog-list>
 
   <!-- Pagination -->
-  @if (!(isLoading$ | async) && totalPages > 1) {
+  @if ((isLoading$ | async) === false && totalPages > 1) {
     <div class="pagination">
       <button 
         class="pagination-btn pagination-nav"

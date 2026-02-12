@@ -28,7 +28,7 @@ export class NotificationService {
     unreadOnly: boolean = false,
     perPage: number = 15
   ): Observable<NotificationsResponse> {
-    let params = new HttpParams()
+    const params = new HttpParams()
       .set('unread_only', unreadOnly.toString())
       .set('per_page', perPage.toString());
 

@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-import { Blog, CreateBlogRequest, UpdateBlogRequest, BlogFormData, BlogStatus } from '../../../../core/models/blog.model';
+import { Subject } from 'rxjs';
+import { Blog, CreateBlogRequest, UpdateBlogRequest, BlogStatus } from '../../../../core/models/blog.model';
 
 @Component({
   selector: 'app-blog-form',
