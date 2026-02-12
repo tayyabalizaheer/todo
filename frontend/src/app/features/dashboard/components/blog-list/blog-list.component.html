@@ -1,0 +1,80 @@
+<div class="blog-list-container">
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading blogs...</p>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!loading && blogs.length === 0) {
+    <div class="empty-state">
+      <p>No blog posts found.</p>
+    </div>
+  }
+
+  <!-- Blog Grid -->
+  @if (blogs.length > 0) {
+    <div class="blog-grid">
+      @for (blog of blogs; track blog.id) {
+        <div 
+          class="blog-card"
+          (click)="onSelectBlog(blog)"
+        >
+      <!-- Featured Image -->
+      <div class="blog-image-container">
+        <img 
+          [src]="blog.featured_image" 
+          [alt]="blog.title"
+          class="blog-image"
+        />
+        <span [class]="'blog-status ' + getStatusClass(blog.status)">
+          {{ blog.status }}
+        </span>
+      </div>
+
+      <!-- Blog Content -->
+      <div class="blog-content">
+        <h3 class="blog-title">{{ blog.title }}</h3>
+        <p class="blog-excerpt">{{ truncateContent(blog.excerpt) }}</p>
+
+        <!-- Blog Meta -->
+        <div class="blog-meta">
+          <div class="meta-item">
+            <span class="meta-icon">👤</span>
+            <span class="meta-text">{{ blog.author.name }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon">📅</span>
+            <span class="meta-text">{{ blog.published_at | date: 'MMM d, yyyy' }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon">👁️</span>
+            <span class="meta-text">{{ blog.views_count }} views</span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="blog-actions">
+          <button 
+            class="btn-edit"
+            (click)="onSelectBlog(blog)"
+            title="Edit blog"
+          >
+            Edit
+          </button>
+          <button 
+            class="btn-delete"
+            (click)="onDeleteBlog(blog.id, $event)"
+            title="Delete blog"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+      }
+    </div>
+  }
+</div>
