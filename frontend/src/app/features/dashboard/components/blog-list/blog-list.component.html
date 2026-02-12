@@ -72,13 +72,13 @@
 
             <!-- Actions -->
             <div class="blog-actions">
-              <button 
+              <a 
                 class="btn-action btn-view"
-                (click)="onSelectBlog(blog, $event)"
+                href="/blog/{{ blog.slug }}" target="_blank"
                 title="View details"
               >
                 View
-              </button>
+            </a>
               <button 
                 class="btn-action btn-edit"
                 (click)="onEditBlog(blog, $event)"

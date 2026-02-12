@@ -39,14 +39,13 @@
     <label for="content" class="form-label">
       Content <span class="required">*</span>
     </label>
-    <textarea
-      id="content"
+    <quill-editor
       formControlName="content"
-      class="form-control content-editor"
-      [class.error]="content?.invalid && content?.touched"
+      [modules]="quillModules"
+      [styles]="{'min-height': '300px'}"
       placeholder="Write your blog content here..."
-      rows="12"
-    ></textarea>
+      [class.error]="content?.invalid && content?.touched"
+    ></quill-editor>
     <div class="error-message" *ngIf="content?.invalid && content?.touched">
       <span *ngIf="content?.errors?.['required']">Content is required</span>
     </div>

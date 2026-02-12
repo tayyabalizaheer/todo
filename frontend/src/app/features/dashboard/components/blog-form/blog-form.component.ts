@@ -5,11 +5,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { Subject } from 'rxjs';
 import { Blog, CreateBlogRequest, UpdateBlogRequest, BlogStatus } from '../../../../core/models/blog.model';
 import Swal from 'sweetalert2';
+import { QuillModule } from 'ngx-quill';
 
 @Component({
   selector: 'app-blog-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule, QuillModule],
   templateUrl: './blog-form.component.html',
   styleUrls: ['./blog-form.component.css']
 })
@@ -23,6 +24,24 @@ export class BlogFormComponent implements OnInit, OnChanges, OnDestroy {
   selectedFile: File | null = null;
   imagePreview: string | null = null;
   isEditMode = false;
+  
+  // Quill editor configuration
+  quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      ['blockquote', 'code-block'],
+      [{ 'header': 1 }, { 'header': 2 }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],
+      [{ 'indent': '-1'}, { 'indent': '+1' }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'align': [] }],
+      ['clean'],
+      ['link', 'image']
+    ]
+  };
   
   private destroy$ = new Subject<void>();
   private submitInProgress = false;

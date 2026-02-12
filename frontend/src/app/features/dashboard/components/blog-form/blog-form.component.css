@@ -48,6 +48,39 @@ textarea.form-control {
   min-height: 80px;
 }
 
+/* Quill Editor Styles */
+::ng-deep .blog-form quill-editor {
+  display: block;
+}
+
+::ng-deep .blog-form quill-editor .ql-container {
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+::ng-deep .blog-form quill-editor .ql-toolbar {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  background-color: #f9fafb;
+}
+
+::ng-deep .blog-form quill-editor.error .ql-container,
+::ng-deep .blog-form quill-editor.error .ql-toolbar {
+  border-color: #ef4444;
+}
+
+::ng-deep .blog-form quill-editor .ql-editor {
+  min-height: 300px;
+  line-height: 1.6;
+}
+
+::ng-deep .blog-form quill-editor .ql-editor.ql-blank::before {
+  color: #9ca3af;
+  font-style: normal;
+}
+
 textarea.content-editor {
   font-family: 'Courier New', monospace;
   line-height: 1.6;
