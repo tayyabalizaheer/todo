@@ -12,7 +12,7 @@
   <div class="dashboard-header">
     <h1 class="dashboard-title">{{ appName }} Dashboard</h1>
     <button class="btn btn-primary" (click)="openCreateModal()">
-      <span class="icon">+</span>
+      <app-icon name="add" size="20" />
       New Todo
     </button>
   </div>
@@ -20,21 +20,21 @@
   <!-- Stats -->
   <div class="stats-grid">
     <div class="stat-card">
-      <div class="stat-icon">📝</div>
+      <div class="stat-icon"><app-icon name="note" size="32" /></div>
       <div class="stat-content">
         <div class="stat-value">{{ vm.todos?.length || 0 }}</div>
         <div class="stat-label">Total Tasks</div>
       </div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon">✓</div>
+      <div class="stat-icon"><app-icon name="checkmark" size="32" /></div>
       <div class="stat-content">
         <div class="stat-value">{{ vm.completedTodosCount || 0 }}</div>
         <div class="stat-label">Completed</div>
       </div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon">⏳</div>
+      <div class="stat-icon"><app-icon name="clock" size="32" /></div>
       <div class="stat-content">
         <div class="stat-value">{{ vm.activeTodosCount || 0 }}</div>
         <div class="stat-label">Active</div>
@@ -45,7 +45,7 @@
   <!-- Filters and Search -->
   <div class="filters-section">
     <div class="search-box">
-      <span class="search-icon">🔍</span>
+      <span class="search-icon"><app-icon name="search" size="20" /></span>
       <input
         type="text"
         [(ngModel)]="searchQuery"
@@ -80,6 +80,12 @@
     </div>
   </div>
 
+  <!-- Info Notice -->
+  <div class="info-notice">
+    <app-icon name="information" size="20" class="info-icon" />
+    <span class="info-text">Check the checkbox to mark a task as completed</span>
+  </div>
+
   <!-- Loading State -->
  
    @if (vm.isLoading) {
@@ -92,7 +98,7 @@
   <!-- Todos List -->
   @else if (!vm.todos || vm.todos.length === 0) {
     <div class="empty-state">
-      <div class="empty-icon">📋</div>
+      <div class="empty-icon"><app-icon name="note" size="64" /></div>
       <h3 class="empty-title">No todos found</h3>
       <p class="empty-description">
         @if (searchQuery) {
@@ -134,7 +140,7 @@
                     [class.due-today]="isDueToday(todo.due_at)"
                     [class.overdue]="isOverdue(todo.due_at)"
                   >
-                    📅 {{ formatDate(todo.due_at) }}
+                    <app-icon name="calendar" size="16" /> {{ formatDate(todo.due_at) }}
                   </span>
                 }
               </div>
@@ -147,11 +153,11 @@
             @if (todo.owner) {
               <div class="todo-meta">
                 <span class="owner-info">
-                  👤 {{ todo.owner.name }}
+                  <app-icon name="user" size="16" /> {{ todo.owner.name }}
                 </span>
                 @if (todo.is_shared) {
                   <span class="shared-info">
-                    👥 Shared
+                    <app-icon name="users" size="16" /> Shared
                   </span>
                 }
               </div>
@@ -161,15 +167,15 @@
           <div class="todo-actions">
             @if (canEdit(todo)) {
               <button class="action-btn edit-btn" (click)="openEditModal(todo)" title="Edit">
-                ✏️
+                <app-icon name="edit" size="18" />
               </button>
             }
             @if (canDelete(todo)) {
               <button class="action-btn share-btn" (click)="openShareModal(todo)" title="Share">
-                👥
+                <app-icon name="share" size="18" />
               </button>
               <button class="action-btn delete-btn" (click)="deleteTodo(todo)" title="Delete">
-                🗑️
+                <app-icon name="delete" size="18" />
               </button>
             }
           </div>

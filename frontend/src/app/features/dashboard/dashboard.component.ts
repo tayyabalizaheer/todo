@@ -7,11 +7,12 @@ import { TodoService } from '../../core/services/todo.service';
 import { Todo, CreateTodoRequest, UpdateTodoRequest } from '../../core/models/todo.model';
 import { TodoModalComponent } from './components/todo-modal/todo-modal.component';
 import { ShareTodoModalComponent } from './components/share-todo-modal/share-todo-modal.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, FormsModule, TodoModalComponent, ShareTodoModalComponent],
+  imports: [CommonModule, FormsModule, TodoModalComponent, ShareTodoModalComponent, IconComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
