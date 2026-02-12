@@ -1,5 +1,46 @@
 # Technical Decisions
 
+---
+
+# Backend Architecture
+
+## Domain-Driven Design (DDD)
+
+- **Domain-Based Architecture**: The backend follows a domain-driven design approach with clear separation of business domains:
+  - **Auth Domain**: User authentication, registration, login/logout, user search
+  - **Todo Domain**: Todo CRUD operations, sharing, completion status management
+  - **Blog Domain**: Blog post management, publishing, archiving
+  - **Notification Domain**: User notifications for todo activities
+  - **Shared Domain**: Common interfaces and contracts used across domains
+
+- **Domain Structure**: Each domain is self-contained with its own:
+  - **Models**: Domain entities (User, Todo, Blog, Notification)
+  - **Controllers**: HTTP request handlers
+  - **Services**: Business logic layer
+  - **Repositories**: Data access layer
+  - **Events**: Domain events (TodoShared, TodoUpdated, etc.)
+  - **Policies**: Authorization rules
+  - **Providers**: Service registration and route binding
+  - **routes.php**: Domain-specific route definitions
+
+- **Shared Resources**: 
+  - Auth domain is used by Todo and Blog domains for user management
+  - Notification domain is used by Todo, Auth, and Blog domains for sending notifications
+  - Common contracts in Shared domain enable loose coupling between domains
+
+## Observer Pattern
+
+- **User Observer**: Implemented `UserObserver` to handle user lifecycle events:
+  - **created()**: Triggered when a new user is created
+    - Logs user creation details (user_id, email, name)
+    - Placeholder for welcome email functionality (to be implemented)
+  - **updated()**: Hook for user profile updates
+  - **deleted()**: Logs user deletion
+  - **restored()**: Hook for soft delete restoration
+  - **forceDeleted()**: Hook for permanent deletion
+  
+  Registered in `EventServiceProvider` to automatically observe User model changes. This provides a clean way to decouple side effects from the main business logic.
+
 ## Authentication
 - **Laravel Sanctum**: Using Laravel Sanctum for API authentication to provide a simple and secure token-based authentication system for single-page applications and mobile applications.
 
@@ -122,3 +163,29 @@
   - Presentational components (modals, forms) focus on UI rendering
   - Improves reusability and testability
   - Clear component responsibilities
+
+## UI/UX Enhancements
+
+- **SweetAlert2 for User Feedback**: Replaced native browser alerts with SweetAlert2 for professional user interactions:
+  - **Success notifications**: Toast-style notifications (top-right corner, auto-dismiss)
+  - **Error alerts**: Modal dialogs with error icons and detailed messages
+  - **Confirmation dialogs**: Beautiful confirm/cancel dialogs for destructive actions
+  - **Warning messages**: File validation errors with appropriate icons
+  - Used across todo deletion, blog management, file uploads, and sharing features
+  - Provides consistent, modern, and user-friendly feedback throughout the application
+
+- **Quill WYSIWYG Editor**: Integrated Quill rich text editor for blog content creation:
+  - **Rich text formatting**: Bold, italic, underline, strike-through
+  - **Headers**: H1-H6 support
+  - **Lists**: Ordered and bullet lists
+  - **Blockquotes and code blocks**: For formatted content
+  - **Text alignment**: Left, center, right, justify
+  - **Colors**: Text and background color customization
+  - **Links and images**: Embedded media support
+  - **Font sizes**: Multiple size options
+  - **Clean formatting**: Remove unwanted formatting
+  - Minimum height of 300px for comfortable editing
+  - Error state styling integrated with form validation
+  - Uses Snow theme for clean, professional appearance
+
+---
