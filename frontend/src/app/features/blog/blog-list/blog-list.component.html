@@ -45,8 +45,6 @@
   <!-- Blog Grid -->
   @if (!isLoading() && !error()) {
     <div class="blog-grid">
-  @if (!isLoading() && !error()) {
-    <div class="blog-grid">
       @for (blog of blogs(); track blog.id) {
         <article 
           class="blog-card" 
@@ -88,43 +86,33 @@
               <span>{{ blog.views_count }} views</span>
             </div>
           </div>
-  @if (totalPages > 1 && !isLoading()) {
-    <nav class="pagination" aria-label="Blog pagination">
-      <button 
-        (click)="prevPage()" 
-        [disabled]="currentPage === 1"
-        class="pagination-btn"
-        type="button"
-        aria-label="Previous page">
-        ← Previous
-      </button>
-      <div class="pagination-info" role="status" aria-live="polite">
-        Page {{ currentPage }} of {{ totalPages }} ({{ totalBlogs }} posts)
-      </div>
-      <button 
-        (click)="nextPage()" 
-        [disabled]="currentPage === totalPages"
-        class="pagination-btn"
-        type="button"
-        aria-label="Next page">
-        Next →
-      </button>
-    </nav>
-  }lick)="prevPage()" 
-      [disabled]="currentPage === 1"
-      class="pagination-btn"
-      aria-label="Previous page">
-      ← Previous
-    </button>
-    <div class="pagination-info">
-      Page {{ currentPage }} of {{ totalPages }} ({{ totalBlogs }} posts)
+        </article>
+      }
     </div>
-    <button 
-      (click)="nextPage()" 
-      [disabled]="currentPage === totalPages"
-      class="pagination-btn"
-      aria-label="Next page">
-      Next →
-    </button>
-  </div>
+
+    <!-- Pagination -->
+    @if (totalPages > 1) {
+      <nav class="pagination" aria-label="Blog pagination">
+        <button 
+          (click)="prevPage()" 
+          [disabled]="currentPage === 1"
+          class="pagination-btn"
+          type="button"
+          aria-label="Previous page">
+          ← Previous
+        </button>
+        <div class="pagination-info" role="status" aria-live="polite">
+          Page {{ currentPage }} of {{ totalPages }} ({{ totalBlogs }} posts)
+        </div>
+        <button 
+          (click)="nextPage()" 
+          [disabled]="currentPage === totalPages"
+          class="pagination-btn"
+          type="button"
+          aria-label="Next page">
+          Next →
+        </button>
+      </nav>
+    }
+  }
 </div>
