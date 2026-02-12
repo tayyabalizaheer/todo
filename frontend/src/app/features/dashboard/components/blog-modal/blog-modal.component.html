@@ -1,0 +1,25 @@
+<div class="modal-backdrop" *ngIf="isOpen" (click)="onBackdropClick($event)">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">{{ modalTitle }}</h2>
+      <button 
+        type="button" 
+        class="close-button" 
+        (click)="onClose()"
+        [disabled]="isSubmitting"
+        aria-label="Close modal"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <app-blog-form
+        [blog]="blog"
+        [isSubmitting]="isSubmitting"
+        (submit)="onSubmit($event)"
+        (cancel)="onCancel()"
+      ></app-blog-form>
+    </div>
+  </div>
+</div>

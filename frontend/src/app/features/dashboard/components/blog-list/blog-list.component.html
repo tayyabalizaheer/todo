@@ -10,70 +10,113 @@
   <!-- Empty State -->
   @if (!loading && blogs.length === 0) {
     <div class="empty-state">
-      <p>No blog posts found.</p>
+      <div class="empty-icon">📝</div>
+      <p class="empty-message">No blog posts found.</p>
+      <p class="empty-hint">Create your first blog post to get started!</p>
     </div>
   }
 
   <!-- Blog Grid -->
-  @if (blogs.length > 0) {
+  @if (!loading && blogs.length > 0) {
     <div class="blog-grid">
-      @for (blog of blogs; track blog.id) {
+      @for (blog of blogs; track trackByBlogId($index, blog)) {
         <div 
           class="blog-card"
           (click)="onSelectBlog(blog)"
         >
-      <!-- Featured Image -->
-      <div class="blog-image-container">
-        <img 
-          [src]="blog.featured_image" 
-          [alt]="blog.title"
-          class="blog-image"
-        />
-        <span [class]="'blog-status ' + getStatusClass(blog.status)">
-          {{ blog.status }}
-        </span>
-      </div>
-
-      <!-- Blog Content -->
-      <div class="blog-content">
-        <h3 class="blog-title">{{ blog.title }}</h3>
-        <p class="blog-excerpt">{{ truncateContent(blog.excerpt) }}</p>
-
-        <!-- Blog Meta -->
-        <div class="blog-meta">
-          <div class="meta-item">
-            <span class="meta-icon">👤</span>
-            <span class="meta-text">{{ blog.author.name }}</span>
+          <!-- Featured Image -->
+          <div class="blog-image-container">
+            @if (blog.featured_image) {
+              <img 
+                [src]="blog.featured_image" 
+                [alt]="blog.title"
+                class="blog-image"
+              />
+            } @else {
+              <div class="blog-image-placeholder">
+                <span class="placeholder-icon"> <app-icon name="note"> </app-icon> </span>
+              </div>
+            }
+            <span [class]="'blog-status ' + getStatusClass(blog.status)">
+              {{ getStatusLabel(blog.status) }}
+            </span>
           </div>
-          <div class="meta-item">
-            <span class="meta-icon">📅</span>
-            <span class="meta-text">{{ blog.published_at | date: 'MMM d, yyyy' }}</span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-icon">👁️</span>
-            <span class="meta-text">{{ blog.views_count }} views</span>
+
+          <!-- Blog Content -->
+          <div class="blog-content">
+            <h3 class="blog-title">{{ blog.title }}</h3>
+            
+            @if (blog.excerpt) {
+              <p class="blog-excerpt">{{ truncateContent(blog.excerpt, 120) }}</p>
+            } @else {
+              <p class="blog-excerpt">{{ truncateContent(blog.content, 120) }}</p>
+            }
+
+            <!-- Blog Meta -->
+            <div class="blog-meta">
+              <div class="meta-item">
+                <span class="meta-icon"><app-icon name="user" size="18" />  </span>
+                <span class="meta-text">{{ blog.author.name }}</span>
+              </div>
+              @if (blog.published_at) {
+                <div class="meta-item">
+                  <span class="meta-icon"><app-icon name="calendar" size="18" /></span>
+                  <span class="meta-text">{{ blog.published_at | date: 'MMM d, yyyy' }}</span>
+                </div>
+              }
+              <div class="meta-item">
+                <span class="meta-icon"><app-icon name="view" size="18" /></span>
+                <span class="meta-text">{{ blog.views_count }}</span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="blog-actions">
+              <button 
+                class="btn-action btn-view"
+                (click)="onSelectBlog(blog, $event)"
+                title="View details"
+              >
+                View
+              </button>
+              <button 
+                class="btn-action btn-edit"
+                (click)="onEditBlog(blog, $event)"
+                title="Edit blog"
+              >
+                Edit
+              </button>
+              
+              @if (blog.status === 'draft') {
+                <button 
+                  class="btn-action btn-publish"
+                  (click)="onPublishBlog(blog.id, $event)"
+                  title="Publish blog"
+                >
+                  Publish
+                </button>
+              }
+              
+              @if (blog.status === 'published') {
+                <button 
+                  class="btn-action btn-unpublish"
+                  (click)="onUnpublishBlog(blog.id, $event)"
+                  title="Unpublish blog"
+                >
+                  Unpublish
+                </button>
+              }
+              
+              <button 
+                class="btn-action btn-delete"
+                (click)="onDeleteBlog(blog.id, $event)"
+                title="Delete blog"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
-
-        <!-- Actions -->
-        <div class="blog-actions">
-          <button 
-            class="btn-edit"
-            (click)="onSelectBlog(blog)"
-            title="Edit blog"
-          >
-            Edit
-          </button>
-          <button 
-            class="btn-delete"
-            (click)="onDeleteBlog(blog.id, $event)"
-            title="Delete blog"
-          >
-            Delete
-          </button>
-        </div>
-      </div>
-    </div>
       }
     </div>
   }

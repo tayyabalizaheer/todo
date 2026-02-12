@@ -1,0 +1,135 @@
+<form [formGroup]="blogForm" (ngSubmit)="onSubmit()" class="blog-form">
+  <!-- Title -->
+  <div class="form-group">
+    <label for="title" class="form-label">
+      Title <span class="required">*</span>
+    </label>
+    <input
+      type="text"
+      id="title"
+      formControlName="title"
+      class="form-control"
+      [class.error]="title?.invalid && title?.touched"
+      placeholder="Enter blog title"
+    />
+    <div class="error-message" *ngIf="title?.invalid && title?.touched">
+      <span *ngIf="title?.errors?.['required']">Title is required</span>
+      <span *ngIf="title?.errors?.['maxlength']">Title must be less than 255 characters</span>
+    </div>
+  </div>
+
+  <!-- Excerpt -->
+  <div class="form-group">
+    <label for="excerpt" class="form-label">Excerpt</label>
+    <textarea
+      id="excerpt"
+      formControlName="excerpt"
+      class="form-control"
+      [class.error]="excerpt?.invalid && excerpt?.touched"
+      placeholder="Brief summary of the blog post (optional)"
+      rows="3"
+    ></textarea>
+    <div class="error-message" *ngIf="excerpt?.invalid && excerpt?.touched">
+      <span *ngIf="excerpt?.errors?.['maxlength']">Excerpt must be less than 500 characters</span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="form-group">
+    <label for="content" class="form-label">
+      Content <span class="required">*</span>
+    </label>
+    <textarea
+      id="content"
+      formControlName="content"
+      class="form-control content-editor"
+      [class.error]="content?.invalid && content?.touched"
+      placeholder="Write your blog content here..."
+      rows="12"
+    ></textarea>
+    <div class="error-message" *ngIf="content?.invalid && content?.touched">
+      <span *ngIf="content?.errors?.['required']">Content is required</span>
+    </div>
+  </div>
+
+  <!-- Featured Image -->
+  <div class="form-group">
+    <label for="featured_image" class="form-label">Featured Image</label>
+    
+    <div class="image-upload-container">
+      <div class="image-preview" *ngIf="imagePreview">
+        <img [src]="imagePreview" alt="Preview" />
+        <button type="button" class="remove-image-btn" (click)="removeImage()" [disabled]="isSubmitting">
+          ✕
+        </button>
+      </div>
+      
+      <div class="file-input-wrapper" *ngIf="!imagePreview">
+        <input
+          type="file"
+          id="featured_image"
+          (change)="onFileSelected($event)"
+          accept="image/*"
+          class="file-input"
+          [disabled]="isSubmitting"
+        />
+        <label for="featured_image" class="file-input-label">
+          <span class="upload-icon">📁</span>
+          <span>Choose Image</span>
+          <span class="file-hint">PNG, JPG, GIF up to 5MB</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status and Published Date -->
+  <div class="form-row">
+    <div class="form-group">
+      <label for="status" class="form-label">
+        Status <span class="required">*</span>
+      </label>
+      <select
+        id="status"
+        formControlName="status"
+        class="form-control"
+        (change)="onStatusChange($event)"
+        [disabled]="isSubmitting"
+      >
+        <option value="draft">Draft</option>
+        <option value="published">Published</option>
+        <option value="archived">Archived</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="published_at" class="form-label">Publish Date</label>
+      <input
+        type="datetime-local"
+        id="published_at"
+        formControlName="published_at"
+        class="form-control"
+        [disabled]="isSubmitting"
+      />
+    </div>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="form-actions">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="onCancel()"
+      [disabled]="isSubmitting"
+    >
+      Cancel
+    </button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="blogForm.invalid || isSubmitting"
+    >
+      <span *ngIf="!isSubmitting">{{ isEditMode ? 'Update' : 'Create' }} Blog</span>
+      <span *ngIf="isSubmitting">{{ isEditMode ? 'Updating...' : 'Creating...' }}</span>
+    </button>
+  </div>
+</form>
