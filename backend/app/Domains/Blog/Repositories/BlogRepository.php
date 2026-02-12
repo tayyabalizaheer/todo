@@ -32,7 +32,7 @@ class BlogRepository
 
     public function getPublishedBlogs(array $filters = []): LengthAwarePaginator
     {
-        $query = Blog::with('author:id,name,email')->published();
+        $query = Blog::with('author:id,name')->published();
 
         if (isset($filters['search'])) {
             $query->search($filters['search']);
@@ -70,7 +70,7 @@ class BlogRepository
 
     public function findBySlug(string $slug): ?Blog
     {
-        return Blog::with('author:id,name,email')
+        return Blog::with('author:id,name')
             ->where('slug', $slug)
             ->first();
     }

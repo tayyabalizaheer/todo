@@ -4,7 +4,8 @@ use App\Domains\Blog\Http\Controllers\BlogController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
-Route::get('/blogs/published', [BlogController::class, 'published']);
+Route::get('/posts', [BlogController::class, 'posts']);
+Route::get('/post/{slug}', [BlogController::class, 'post']);
 
 // Protected routes (requires authentication)
 Route::middleware('auth:sanctum')->group(function () {

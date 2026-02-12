@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class Blog extends Model
 {
@@ -88,6 +89,15 @@ class Blog extends Model
               ->orWhere('excerpt', 'like', '%' . $search . '%')
               ->orWhere('content', 'like', '%' . $search . '%');
         });
+    }
+
+    public function getFeaturedImageUrl(): ?string
+    {
+        if (!$this->featured_image) {
+            return null;
+        }
+        
+        return Storage::disk('public')->url('blogs/featured-images/' . $this->featured_image);
     }
 
     public function incrementViews()
