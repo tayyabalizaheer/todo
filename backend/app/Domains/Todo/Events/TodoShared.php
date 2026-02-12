@@ -12,6 +12,7 @@ class TodoShared
     use Dispatchable, SerializesModels;
 
     public Todo $todo;
+
     public TodoShare $share;
 
     /**

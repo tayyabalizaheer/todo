@@ -2,9 +2,9 @@
 
 namespace App\Domains\Notification\Listeners;
 
-use App\Domains\Todo\Events\TodoDeleted;
-use App\Domains\Notification\Services\NotificationService;
 use App\Domains\Auth\Models\User;
+use App\Domains\Notification\Services\NotificationService;
+use App\Domains\Todo\Events\TodoDeleted;
 
 class SendTodoDeletedNotification
 {
@@ -25,14 +25,14 @@ class SendTodoDeletedNotification
     {
         $todo = $event->todo;
         $deletedBy = $event->deletedBy;
-        
+
         // Notify all shared users (passed from the event)
         foreach ($event->sharedUserIds as $userId) {
             // Skip the user who deleted the todo
             if ($userId === $deletedBy->id) {
                 continue;
             }
-            
+
             $user = User::find($userId);
             if ($user) {
                 $this->notificationService->createNotification(

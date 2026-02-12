@@ -11,7 +11,7 @@ Route::get('/post/{slug}', [BlogController::class, 'post']);
 Route::middleware('auth:sanctum')->group(function () {
     // Blog API Resource routes
     Route::apiResource('blogs', BlogController::class);
-    
+
     // Additional blog management routes
     Route::post('/blogs/{id}/publish', [BlogController::class, 'publish']);
     Route::post('/blogs/{id}/unpublish', [BlogController::class, 'unpublish']);

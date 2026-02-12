@@ -2,21 +2,20 @@
 
 namespace App\Domains\Todo\Services;
 
-use App\Domains\Todo\Repositories\TodoRepository;
-use App\Domains\Auth\Repositories\UserRepository;
-use App\Domains\Todo\Models\Todo;
-use App\Domains\Todo\Models\TodoShare;
 use App\Domains\Auth\Models\User;
-use App\Domains\Todo\Events\TodoShared;
-use App\Domains\Todo\Events\TodoShareAccepted;
-use App\Domains\Todo\Events\TodoUpdated;
+use App\Domains\Auth\Repositories\UserRepository;
 use App\Domains\Todo\Events\TodoDeleted;
-use Illuminate\Database\Eloquent\Collection;
+use App\Domains\Todo\Events\TodoShareAccepted;
+use App\Domains\Todo\Events\TodoShared;
+use App\Domains\Todo\Events\TodoUpdated;
+use App\Domains\Todo\Models\Todo;
+use App\Domains\Todo\Repositories\TodoRepository;
 use Carbon\Carbon;
 
 class TodoService
 {
     protected TodoRepository $repository;
+
     protected UserRepository $userRepository;
 
     public function __construct(TodoRepository $repository, UserRepository $userRepository)
@@ -34,20 +33,20 @@ class TodoService
     {
         // Check if user can access this todo (owner or shared with any permission)
         $todo = $this->repository->findTodoWithAccess($id, $userId);
-        
-        if (!$todo) {
+
+        if (! $todo) {
             return null;
         }
-        
+
         return $this->addSharingInfo($todo, $userId);
     }
 
     public function createTodo(array $data, int $userId): Todo
     {
         $data['owner_id'] = $userId;
-        
+
         // Set default status if not provided
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = 'open';
         }
 
@@ -59,7 +58,7 @@ class TodoService
         // Check if user can edit this todo (owner, edit, or owner permission)
         $todo = $this->repository->findTodoWithAccess($id, $userId, ['edit', 'owner']);
 
-        if (!$todo) {
+        if (! $todo) {
             return null;
         }
 
@@ -86,19 +85,18 @@ class TodoService
         return $this->addSharingInfo($todo->fresh(), $userId);
     }
 
- 
     public function deleteTodo(int $id, int $userId): bool
     {
         // Only owner can delete a todo
         $todo = $this->repository->findTodoWithAccess($id, $userId, ['owner']);
 
-        if (!$todo) {
+        if (! $todo) {
             return false;
         }
 
         // Get all shared user IDs before deleting
         $sharedUserIds = $todo->shares()->pluck('shared_with_user_id')->toArray();
-        
+
         // Fire TodoDeleted event
         $deletedBy = User::find($userId);
         event(new TodoDeleted($todo, $deletedBy, $sharedUserIds));
@@ -121,7 +119,7 @@ class TodoService
         // Check if the todo exists and belongs to the current user
         $todo = $this->repository->findByIdAndUser($todoId, $currentUserId);
 
-        if (!$todo) {
+        if (! $todo) {
             return [
                 'success' => false,
                 'message' => 'Todo not found or you do not have permission to share it.',
@@ -131,7 +129,7 @@ class TodoService
         // Find the user by email
         $sharedWithUser = $this->userRepository->findByEmail($email);
 
-        if (!$sharedWithUser) {
+        if (! $sharedWithUser) {
             return [
                 'success' => false,
                 'message' => 'User with this email does not exist.',
@@ -174,7 +172,7 @@ class TodoService
         // Find the share
         $share = $this->repository->findExistingShare($todoId, $userId);
 
-        if (!$share) {
+        if (! $share) {
             return [
                 'success' => false,
                 'message' => 'This todo is not shared with you.',
@@ -202,7 +200,7 @@ class TodoService
             'share' => $share->fresh(),
         ];
     }
-    
+
     /**
      * Add sharing information to a todo (owner, is_shared, permission)
      */
@@ -210,7 +208,7 @@ class TodoService
     {
         // Check if this is a shared todo
         $share = $todo->shares->where('shared_with_user_id', $userId)->first();
-        
+
         if ($share && $todo->owner_id !== $userId) {
             $todo->is_shared = true;
             $todo->permission = $share->permission;
@@ -218,10 +216,10 @@ class TodoService
             $todo->is_shared = false;
             $todo->permission = 'owner';
         }
-        
+
         // Remove shares relationship from output to keep response clean
         unset($todo->shares);
-        
+
         return $todo;
     }
 }

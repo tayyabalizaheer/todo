@@ -12,7 +12,7 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me', [AuthController::class, 'me']);
-    
+
     // User search route while sharing todos
     Route::get('/users/search', [UserController::class, 'search']);
 });

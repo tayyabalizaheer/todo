@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 class TodoRepository
 {
-
     public function getUserTodos(int $userId, array $filters = []): Collection
     {
         $query = Todo::where('owner_id', $userId);
@@ -20,7 +19,7 @@ class TodoRepository
         if (isset($filters['search'])) {
             $query->where(function ($q) use ($filters) {
                 $q->where('title', 'like', '%' . $filters['search'] . '%')
-                  ->orWhere('description', 'like', '%' . $filters['search'] . '%');
+                    ->orWhere('description', 'like', '%' . $filters['search'] . '%');
             });
         }
 
@@ -42,13 +41,13 @@ class TodoRepository
             'owner:id,name,email',
             'shares' => function ($q) use ($userId) {
                 $q->where('shared_with_user_id', $userId)
-                  ->with('sharedByUser:id,name,email');
-            }
+                    ->with('sharedByUser:id,name,email');
+            },
         ])
-        ->where(function ($q) use ($userId, $sharedTodoIds) {
-            $q->where('owner_id', $userId)
-              ->orWhereIn('id', $sharedTodoIds);
-        });
+            ->where(function ($q) use ($userId, $sharedTodoIds) {
+                $q->where('owner_id', $userId)
+                    ->orWhereIn('id', $sharedTodoIds);
+            });
 
         if (isset($filters['status'])) {
             $query->where('status', $filters['status']);
@@ -57,14 +56,14 @@ class TodoRepository
         if (isset($filters['search'])) {
             $query->where(function ($q) use ($filters) {
                 $q->where('title', 'like', '%' . $filters['search'] . '%')
-                  ->orWhere('description', 'like', '%' . $filters['search'] . '%');
+                    ->orWhere('description', 'like', '%' . $filters['search'] . '%');
             });
         }
 
         $query->orderBy('created_at', 'desc');
 
         $perPage = $filters['per_page'] ?? 15;
-        if($perPage > 100) {
+        if ($perPage > 100) {
             $perPage = 100; // Limit max per page to prevent abuse
         }
         $todos = $query->paginate($perPage);
@@ -72,7 +71,7 @@ class TodoRepository
         // Add sharing information to each todo
         $todos->getCollection()->transform(function ($todo) use ($userId) {
             $share = $todo->shares->first();
-            
+
             if ($share && $todo->owner_id !== $userId) {
                 $todo->is_shared = true;
                 $todo->permission = $share->permission;
@@ -80,10 +79,10 @@ class TodoRepository
                 $todo->is_shared = false;
                 $todo->permission = 'owner';
             }
-            
+
             // Remove shares relationship from output to keep response clean
             unset($todo->shares);
-            
+
             return $todo;
         });
 
@@ -144,8 +143,8 @@ class TodoRepository
     public function getUserPermissionForTodo(int $todoId, int $userId): ?string
     {
         $todo = $this->findById($todoId);
-        
-        if (!$todo) {
+
+        if (! $todo) {
             return null;
         }
 
@@ -168,11 +167,11 @@ class TodoRepository
             'owner:id,name,email',
             'shares' => function ($q) use ($userId) {
                 $q->where('shared_with_user_id', $userId)
-                  ->with('sharedByUser:id,name,email');
-            }
+                    ->with('sharedByUser:id,name,email');
+            },
         ])->find($id);
-        
-        if (!$todo) {
+
+        if (! $todo) {
             return null;
         }
 
@@ -186,7 +185,7 @@ class TodoRepository
             ->where('shared_with_user_id', $userId)
             ->first();
 
-        if (!$share) {
+        if (! $share) {
             return null;
         }
 

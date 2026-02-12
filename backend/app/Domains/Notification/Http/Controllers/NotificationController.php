@@ -2,11 +2,11 @@
 
 namespace App\Domains\Notification\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Domains\Notification\Services\NotificationService;
 use App\Domains\Notification\Http\Resources\NotificationResource;
-use Illuminate\Http\Request;
+use App\Domains\Notification\Services\NotificationService;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
@@ -21,7 +21,7 @@ class NotificationController extends Controller
     {
         $unreadOnly = $request->query('unread_only', false);
         $perPage = $request->query('per_page', 15);
-        
+
         $notifications = $this->notificationService->getUserNotifications(
             $request->user()->id,
             filter_var($unreadOnly, FILTER_VALIDATE_BOOLEAN),
@@ -59,7 +59,7 @@ class NotificationController extends Controller
     {
         $notification = $this->notificationService->getNotificationById($id, $request->user()->id);
 
-        if (!$notification) {
+        if (! $notification) {
             return response()->json([
                 'success' => false,
                 'message' => 'Notification not found.',
@@ -92,7 +92,7 @@ class NotificationController extends Controller
     {
         $notification = $this->notificationService->getNotificationById($id, $request->user()->id);
 
-        if (!$notification) {
+        if (! $notification) {
             return response()->json([
                 'success' => false,
                 'message' => 'Notification not found.',

@@ -2,9 +2,9 @@
 
 namespace App\Domains\Auth\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Domains\Auth\Http\Resources\UserSearchResource;
 use App\Domains\Auth\Services\UserService;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

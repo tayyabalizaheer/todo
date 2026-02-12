@@ -2,8 +2,8 @@
 
 namespace App\Domains\Todo\Events;
 
-use App\Domains\Todo\Models\Todo;
 use App\Domains\Auth\Models\User;
+use App\Domains\Todo\Models\Todo;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -12,7 +12,9 @@ class TodoUpdated
     use Dispatchable, SerializesModels;
 
     public Todo $todo;
+
     public User $updatedBy;
+
     public array $sharedUserIds;
 
     /**

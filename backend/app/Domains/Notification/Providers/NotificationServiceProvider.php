@@ -4,11 +4,11 @@ namespace App\Domains\Notification\Providers;
 
 use App\Domains\Notification\Models\Notification;
 use App\Domains\Notification\Policies\NotificationPolicy;
-use App\Domains\Shared\Contracts\NotificationServiceInterface;
 use App\Domains\Notification\Services\NotificationService;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
+use App\Domains\Shared\Contracts\NotificationServiceInterface;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
 
 class NotificationServiceProvider extends ServiceProvider
 {

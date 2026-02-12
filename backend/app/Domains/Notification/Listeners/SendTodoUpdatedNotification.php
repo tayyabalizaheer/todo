@@ -2,9 +2,9 @@
 
 namespace App\Domains\Notification\Listeners;
 
-use App\Domains\Todo\Events\TodoUpdated;
-use App\Domains\Notification\Services\NotificationService;
 use App\Domains\Auth\Models\User;
+use App\Domains\Notification\Services\NotificationService;
+use App\Domains\Todo\Events\TodoUpdated;
 
 class SendTodoUpdatedNotification
 {
@@ -25,7 +25,7 @@ class SendTodoUpdatedNotification
     {
         $todo = $event->todo;
         $updatedBy = $event->updatedBy;
-        
+
         // Notify the owner if they didn't make the update
         if ($todo->owner_id !== $updatedBy->id) {
             $this->notificationService->createNotification(
@@ -40,14 +40,14 @@ class SendTodoUpdatedNotification
                 ]
             );
         }
-        
+
         // Notify all shared users (passed from the event) except the one who made the update
         foreach ($event->sharedUserIds as $userId) {
             // Skip the user who updated the todo
             if ($userId === $updatedBy->id) {
                 continue;
             }
-            
+
             $user = User::find($userId);
             if ($user) {
                 $this->notificationService->createNotification(

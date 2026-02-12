@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('views_count')->default(0);
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->index(['status', 'published_at']);
         });
     }

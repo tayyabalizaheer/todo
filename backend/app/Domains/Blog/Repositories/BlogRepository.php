@@ -4,7 +4,6 @@ namespace App\Domains\Blog\Repositories;
 
 use App\Domains\Blog\Models\Blog;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 
 class BlogRepository
 {
@@ -92,6 +91,7 @@ class BlogRepository
     {
         $blog->update($data);
         $blog->refresh();
+
         return $blog;
     }
 

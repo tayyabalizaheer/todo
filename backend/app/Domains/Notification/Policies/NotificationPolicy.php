@@ -4,7 +4,6 @@ namespace App\Domains\Notification\Policies;
 
 use App\Domains\Auth\Models\User;
 use App\Domains\Notification\Models\Notification;
-use Illuminate\Auth\Access\Response;
 
 class NotificationPolicy
 {
@@ -21,7 +20,7 @@ class NotificationPolicy
      */
     public function view(User $user, Notification $notification): bool
     {
-        return $notification->notifiable_id === $user->id 
+        return $notification->notifiable_id === $user->id
             && $notification->notifiable_type === User::class;
     }
 
@@ -30,7 +29,7 @@ class NotificationPolicy
      */
     public function update(User $user, Notification $notification): bool
     {
-        return $notification->notifiable_id === $user->id 
+        return $notification->notifiable_id === $user->id
             && $notification->notifiable_type === User::class;
     }
 
@@ -39,7 +38,7 @@ class NotificationPolicy
      */
     public function delete(User $user, Notification $notification): bool
     {
-        return $notification->notifiable_id === $user->id 
+        return $notification->notifiable_id === $user->id
             && $notification->notifiable_type === User::class;
     }
 }

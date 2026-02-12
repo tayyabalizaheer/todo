@@ -53,11 +53,12 @@ class NotificationService implements NotificationServiceInterface
     {
         $notification = $this->repository->findByIdAndUser($notificationId, $userId);
 
-        if (!$notification) {
+        if (! $notification) {
             return false;
         }
 
         $notification->markAsRead();
+
         return true;
     }
 
@@ -76,7 +77,7 @@ class NotificationService implements NotificationServiceInterface
     {
         $notification = $this->repository->findByIdAndUser($notificationId, $userId);
 
-        if (!$notification) {
+        if (! $notification) {
             return false;
         }
 

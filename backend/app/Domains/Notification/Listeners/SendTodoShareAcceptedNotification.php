@@ -2,8 +2,8 @@
 
 namespace App\Domains\Notification\Listeners;
 
-use App\Domains\Todo\Events\TodoShareAccepted;
 use App\Domains\Notification\Services\NotificationService;
+use App\Domains\Todo\Events\TodoShareAccepted;
 
 class SendTodoShareAcceptedNotification
 {
@@ -24,10 +24,10 @@ class SendTodoShareAcceptedNotification
     {
         $todo = $event->todo;
         $share = $event->share;
-        
+
         // Get the user who accepted the share
         $acceptedByUser = $share->sharedWithUser;
-        
+
         // Send notification to the owner of the todo
         $this->notificationService->createNotification(
             $todo->owner,

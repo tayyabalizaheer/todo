@@ -2,12 +2,12 @@
 
 namespace App\Domains\Todo\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Domains\Todo\Http\Requests\ShareTodoRequest;
 use App\Domains\Todo\Http\Requests\StoreTodoRequest;
 use App\Domains\Todo\Http\Requests\UpdateTodoRequest;
-use App\Domains\Todo\Http\Requests\ShareTodoRequest;
 use App\Domains\Todo\Http\Resources\TodoResource;
 use App\Domains\Todo\Services\TodoService;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -57,7 +57,7 @@ class TodoController extends Controller
     {
         $todo = $this->todoService->getTodo($id, $request->user()->id);
 
-        if (!$todo) {
+        if (! $todo) {
             return response()->json([
                 'success' => false,
                 'message' => 'Todo not found',
@@ -79,7 +79,7 @@ class TodoController extends Controller
             $request->user()->id
         );
 
-        if (!$todo) {
+        if (! $todo) {
             return response()->json([
                 'success' => false,
                 'message' => 'Todo not found',
@@ -97,7 +97,7 @@ class TodoController extends Controller
     {
         $deleted = $this->todoService->deleteTodo($id, $request->user()->id);
 
-        if (!$deleted) {
+        if (! $deleted) {
             return response()->json([
                 'success' => false,
                 'message' => 'Todo not found',
@@ -114,7 +114,7 @@ class TodoController extends Controller
     {
         $todo = $this->todoService->markAsCompleted($id, $request->user()->id);
 
-        if (!$todo) {
+        if (! $todo) {
             return response()->json([
                 'success' => false,
                 'message' => 'Todo not found',
@@ -132,7 +132,7 @@ class TodoController extends Controller
     {
         $todo = $this->todoService->markAsOpen($id, $request->user()->id);
 
-        if (!$todo) {
+        if (! $todo) {
             return response()->json([
                 'success' => false,
                 'message' => 'Todo not found',
@@ -154,7 +154,7 @@ class TodoController extends Controller
 
         $results = [];
         $errors = [];
-        
+
         foreach ($emails as $email) {
             $result = $this->todoService->shareTodo(
                 $id,
@@ -168,7 +168,7 @@ class TodoController extends Controller
             } else {
                 $errors[] = [
                     'email' => $email,
-                    'message' => $result['message']
+                    'message' => $result['message'],
                 ];
             }
         }
@@ -183,7 +183,7 @@ class TodoController extends Controller
         }
 
         // If some succeeded, return success with details
-        $message = count($emails) === 1 
+        $message = count($emails) === 1
             ? 'Todo shared successfully'
             : sprintf('Todo shared with %d out of %d users', count($results), count($emails));
 
@@ -191,7 +191,7 @@ class TodoController extends Controller
             'success' => true,
             'message' => $message,
             'data' => $results,
-            'errors' => !empty($errors) ? $errors : null,
+            'errors' => ! empty($errors) ? $errors : null,
         ], 201);
     }
 
@@ -199,7 +199,7 @@ class TodoController extends Controller
     {
         $result = $this->todoService->acceptSharedTodo($id, $request->user()->id);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return response()->json([
                 'success' => false,
                 'message' => $result['message'],

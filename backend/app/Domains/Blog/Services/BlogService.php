@@ -2,11 +2,11 @@
 
 namespace App\Domains\Blog\Services;
 
-use App\Domains\Blog\Repositories\BlogRepository;
 use App\Domains\Blog\Models\Blog;
-use Illuminate\Support\Str;
+use App\Domains\Blog\Repositories\BlogRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Mews\Purifier\Facades\Purifier;
 
 class BlogService
@@ -41,11 +41,11 @@ class BlogService
     public function getBlogBySlug(string $slug): ?Blog
     {
         $blog = $this->repository->findBySlug($slug);
-        
+
         if ($blog && $blog->isPublished()) {
             $this->repository->incrementViews($blog);
         }
-        
+
         return $blog;
     }
 
@@ -57,7 +57,7 @@ class BlogService
     public function createBlog(array $data, int $authorId): Blog
     {
         $data['author_id'] = $authorId;
-        
+
         if (isset($data['content'])) {
             $data['content'] = Purifier::clean($data['content']);
         }
@@ -69,7 +69,7 @@ class BlogService
             $file->storeAs('blogs/featured-images', $randomName, 'public');
             $data['featured_image'] = $randomName;
         }
-        
+
         if (empty($data['slug'])) {
             $data['slug'] = $this->generateUniqueSlug($data['title']);
         } else {
@@ -79,7 +79,7 @@ class BlogService
             }
         }
 
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = 'draft';
         }
 
@@ -87,7 +87,7 @@ class BlogService
             $data['published_at'] = Carbon::now();
         }
 
-        if (empty($data['excerpt']) && !empty($data['content'])) {
+        if (empty($data['excerpt']) && ! empty($data['content'])) {
             $data['excerpt'] = Str::limit(strip_tags($data['content']), 200);
         }
 
@@ -98,7 +98,7 @@ class BlogService
     {
         $blog = $this->repository->findByIdAndAuthor($id, $authorId);
 
-        if (!$blog) {
+        if (! $blog) {
             return null;
         }
 
@@ -141,7 +141,7 @@ class BlogService
     {
         $blog = $this->repository->findByIdAndAuthor($id, $authorId);
 
-        if (!$blog) {
+        if (! $blog) {
             return false;
         }
 
@@ -156,7 +156,7 @@ class BlogService
     {
         $blog = $this->repository->findByIdAndAuthor($id, $authorId);
 
-        if (!$blog) {
+        if (! $blog) {
             return null;
         }
 
@@ -170,7 +170,7 @@ class BlogService
     {
         $blog = $this->repository->findByIdAndAuthor($id, $authorId);
 
-        if (!$blog) {
+        if (! $blog) {
             return null;
         }
 
@@ -183,7 +183,7 @@ class BlogService
     {
         $blog = $this->repository->findByIdAndAuthor($id, $authorId);
 
-        if (!$blog) {
+        if (! $blog) {
             return null;
         }
 

@@ -2,12 +2,12 @@
 
 namespace App\Domains\Blog\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Domains\Blog\Http\Requests\StoreBlogRequest;
 use App\Domains\Blog\Http\Requests\UpdateBlogRequest;
 use App\Domains\Blog\Http\Resources\BlogResource;
 use App\Domains\Blog\Http\Resources\PublicBlogResource;
 use App\Domains\Blog\Services\BlogService;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -23,9 +23,10 @@ class BlogController extends Controller
     public function index(Request $request): JsonResponse
     {
         $filters = $request->only(['status', 'search', 'per_page']);
-        
+
         if ($request->user()) {
             $blogs = $this->blogService->getBlogsByAuthor($request->user()->id, $filters);
+
             return response()->json([
                 'success' => true,
                 'data' => BlogResource::collection($blogs->items()),
@@ -40,6 +41,7 @@ class BlogController extends Controller
             ]);
         } else {
             $blogs = $this->blogService->getPublishedBlogs($filters);
+
             return response()->json([
                 'success' => true,
                 'data' => PublicBlogResource::collection($blogs->items()),
@@ -71,25 +73,25 @@ class BlogController extends Controller
 
     public function show(Request $request, string $id): JsonResponse
     {
-        $blog = is_numeric($id) 
+        $blog = is_numeric($id)
             ? $this->blogService->getBlogById((int) $id)
             : $this->blogService->getBlogBySlug($id);
 
-        if (!$blog) {
+        if (! $blog) {
             return response()->json([
                 'success' => false,
                 'message' => 'Blog not found',
             ], 404);
         }
 
-        if ($blog->status !== 'published' && (!$request->user() || $request->user()->id !== $blog->author_id)) {
+        if ($blog->status !== 'published' && (! $request->user() || $request->user()->id !== $blog->author_id)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Blog not found',
             ], 404);
         }
 
-        $resource = ($blog->status === 'published' && (!$request->user() || $request->user()->id !== $blog->author_id))
+        $resource = ($blog->status === 'published' && (! $request->user() || $request->user()->id !== $blog->author_id))
             ? new PublicBlogResource($blog)
             : new BlogResource($blog);
 
@@ -108,7 +110,7 @@ class BlogController extends Controller
             $request->user()->id
         );
 
-        if (!$blog) {
+        if (! $blog) {
             return response()->json([
                 'success' => false,
                 'message' => 'Blog not found or you do not have permission to update it',
@@ -126,7 +128,7 @@ class BlogController extends Controller
     {
         $deleted = $this->blogService->deleteBlog($id, $request->user()->id);
 
-        if (!$deleted) {
+        if (! $deleted) {
             return response()->json([
                 'success' => false,
                 'message' => 'Blog not found or you do not have permission to delete it',
@@ -143,7 +145,7 @@ class BlogController extends Controller
     {
         $blog = $this->blogService->publishBlog($id, $request->user()->id);
 
-        if (!$blog) {
+        if (! $blog) {
             return response()->json([
                 'success' => false,
                 'message' => 'Blog not found or you do not have permission to publish it',
@@ -161,7 +163,7 @@ class BlogController extends Controller
     {
         $blog = $this->blogService->unpublishBlog($id, $request->user()->id);
 
-        if (!$blog) {
+        if (! $blog) {
             return response()->json([
                 'success' => false,
                 'message' => 'Blog not found or you do not have permission to unpublish it',
@@ -179,7 +181,7 @@ class BlogController extends Controller
     {
         $blog = $this->blogService->archiveBlog($id, $request->user()->id);
 
-        if (!$blog) {
+        if (! $blog) {
             return response()->json([
                 'success' => false,
                 'message' => 'Blog not found or you do not have permission to archive it',
@@ -216,7 +218,7 @@ class BlogController extends Controller
     {
         $blog = $this->blogService->getBlogBySlug($slug);
 
-        if (!$blog) {
+        if (! $blog) {
             return response()->json([
                 'success' => false,
                 'message' => 'Blog not found',

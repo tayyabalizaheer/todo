@@ -2,17 +2,17 @@
 
 namespace App\Domains\Todo\Providers;
 
-use App\Domains\Todo\Events\TodoShared;
-use App\Domains\Todo\Events\TodoShareAccepted;
-use App\Domains\Todo\Events\TodoUpdated;
-use App\Domains\Todo\Events\TodoDeleted;
-use App\Domains\Notification\Listeners\SendTodoSharedNotification;
-use App\Domains\Notification\Listeners\SendTodoShareAcceptedNotification;
-use App\Domains\Notification\Listeners\SendTodoUpdatedNotification;
 use App\Domains\Notification\Listeners\SendTodoDeletedNotification;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
+use App\Domains\Notification\Listeners\SendTodoShareAcceptedNotification;
+use App\Domains\Notification\Listeners\SendTodoSharedNotification;
+use App\Domains\Notification\Listeners\SendTodoUpdatedNotification;
+use App\Domains\Todo\Events\TodoDeleted;
+use App\Domains\Todo\Events\TodoShareAccepted;
+use App\Domains\Todo\Events\TodoShared;
+use App\Domains\Todo\Events\TodoUpdated;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
 
 class TodoServiceProvider extends ServiceProvider
 {
