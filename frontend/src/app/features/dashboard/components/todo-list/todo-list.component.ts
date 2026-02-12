@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject, BehaviorSubject, takeUntil, debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { Subject, BehaviorSubject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
 import { TodoService } from '../../../../core/services/todo.service';
 import { Todo, CreateTodoRequest, UpdateTodoRequest, TodoCounts } from '../../../../core/models/todo.model';
 import { TodoModalComponent } from '../todo-modal/todo-modal.component';
