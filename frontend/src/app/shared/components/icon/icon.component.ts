@@ -52,7 +52,7 @@ export class IconComponent {
     return this.sanitizer.bypassSecurityTrustHtml(svg);
   }
 
-  private getIconPaths(name: string): any[] {
+  private getIconPaths(name: string): Array<[string, Record<string, string>]> {
     // Import icons dynamically
     switch (name) {
       case 'add': return [["path", { d: "M12.001 5.00003V19.002", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.5" }],["path", { d: "M19.002 12.002L4.99998 12.002", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.5" }]];

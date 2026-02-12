@@ -65,13 +65,13 @@ export class BlogListComponent implements OnInit, OnDestroy {
     this.isLoading.set(true);
     this.error.set(null);
     
-    const params: any = {
+    const params: Record<string, number | string> = {
       page: this.currentPage,
       per_page: this.perPage
     };
 
     if (this.searchTerm.trim().length >= 2) {
-      params.search = this.searchTerm.trim();
+      params['search'] = this.searchTerm.trim();
     }
 
     this.blogService.getPublicPosts(params)

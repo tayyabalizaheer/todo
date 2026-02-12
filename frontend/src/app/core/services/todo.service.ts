@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { CreateTodoRequest, UpdateTodoRequest, TodoApiResponse } from '../models/todo.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -78,8 +78,8 @@ export class TodoService {
   /**
    * Share a todo with one or more users
    */
-  shareTodo(todoId: number, emails: string[], permission: 'view' | 'edit' | 'owner' = 'view'): Observable<{ success: boolean; message: string; data?: any; errors?: any }> {
-    return this.http.post<{ success: boolean; message: string; data?: any; errors?: any }>(`${this.apiUrl}/${todoId}/share`, {
+  shareTodo(todoId: number, emails: string[], permission: 'view' | 'edit' | 'owner' = 'view'): Observable<{ success: boolean; message: string; data?: unknown; errors?: Array<{ email: string; message: string }> }> {
+    return this.http.post<{ success: boolean; message: string; data?: unknown; errors?: Array<{ email: string; message: string }> }>(`${this.apiUrl}/${todoId}/share`, {
       emails,
       permission
     });
@@ -88,7 +88,7 @@ export class TodoService {
   /**
    * Accept a shared todo
    */
-  acceptSharedTodo(todoId: number): Observable<{ success: boolean; message: string; data?: any }> {
-    return this.http.post<{ success: boolean; message: string; data?: any }>(`${this.apiUrl}/${todoId}/accept`, {});
+  acceptSharedTodo(todoId: number): Observable<{ success: boolean; message: string; data?: unknown }> {
+    return this.http.post<{ success: boolean; message: string; data?: unknown }>(`${this.apiUrl}/${todoId}/accept`, {});
   }
 }

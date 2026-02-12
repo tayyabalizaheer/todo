@@ -86,16 +86,16 @@ export class TodoListComponent implements OnInit, OnDestroy {
     this.isLoadingSubject$.next(true);
     this.errorSubject$.next(null);
 
-    const params: any = { per_page: 100 };
+    const params: Record<string, number | string> = { per_page: 100 };
 
     if (this.filterStatus === 'active') {
-      params.status = 'open';
+      params['status'] = 'open';
     } else if (this.filterStatus === 'completed') {
-      params.status = 'completed';
+      params['status'] = 'completed';
     }
 
     if (this.searchQuery.trim().length >= 2) {
-      params.search = this.searchQuery.trim();
+      params['search'] = this.searchQuery.trim();
     }
 
     this.todoService.getTodos(params)
@@ -278,7 +278,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
           this.closeShareModal();
           
           if (response.errors && response.errors.length > 0) {
-            alert(`${response.message}\n\nFailed to share with:\n${response.errors.map((e: any) => `- ${e.email}: ${e.message}`).join('\n')}`);
+            alert(`${response.message}\n\nFailed to share with:\n${response.errors.map((e: { email: string; message: string }) => `- ${e.email}: ${e.message}`).join('\n')}`);
           } else {
             alert(response.message || 'Todo shared successfully!');
           }

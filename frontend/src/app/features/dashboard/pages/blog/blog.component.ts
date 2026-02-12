@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject, BehaviorSubject, takeUntil, debounceTime, distinctUntilChanged, exhaustMap, finalize, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
+import { Subject, BehaviorSubject, takeUntil, debounceTime, distinctUntilChanged, exhaustMap, finalize, tap } from 'rxjs';
 import { BlogService } from '../../../../core/services/blog.service';
 import { Blog, CreateBlogRequest, UpdateBlogRequest, BlogStatus } from '../../../../core/models/blog.model';
 import { BlogListComponent } from '../../components/blog-list/blog-list.component';
@@ -129,17 +129,17 @@ export class BlogComponent implements OnInit, OnDestroy {
     this.isLoadingSubject$.next(true);
     this.errorSubject$.next(null);
     
-    const params: any = {
+    const params: Record<string, number | string> = {
       page: this.currentPage,
       per_page: this.perPage
     };
 
     if (this.searchTerm.trim().length >= 2) {
-      params.search = this.searchTerm.trim();
+      params['search'] = this.searchTerm.trim();
     }
 
     if (this.statusFilter !== 'all') {
-      params.status = this.statusFilter;
+      params['status'] = this.statusFilter;
     }
 
     this.blogService.getBlogs(params)
@@ -209,8 +209,7 @@ export class BlogComponent implements OnInit, OnDestroy {
     });
   }
 
-  onBlogSelected(blog: Blog): void {
-    console.log('Blog selected:', blog);
+  onBlogSelected(_blog: Blog): void {
     // TODO: Navigate to blog detail view or open detail modal
   }
 

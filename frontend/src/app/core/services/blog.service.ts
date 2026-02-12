@@ -141,7 +141,7 @@ export class BlogService {
     const formData = new FormData();
     
     Object.keys(blog).forEach(key => {
-      const value = (blog as any)[key];
+      const value = (blog as Record<string, unknown>)[key];
       if (value !== undefined && value !== null) {
         if (key === 'featured_image' && value instanceof File) {
           formData.append(key, value);
