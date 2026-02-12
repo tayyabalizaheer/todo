@@ -79,7 +79,7 @@
   padding: 1rem;
   background-color: #f9fafb;
   border-radius: 0.375rem;
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid #00a3a3;
 }
 
 .todo-title {
@@ -116,7 +116,7 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #00a3a3;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -185,7 +185,7 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #00a3a3 0%, #8b5cf6 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -221,7 +221,7 @@
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-  color: #3b82f6;
+  color: #00a3a3;
   border-radius: 0.375rem;
   transition: all 0.2s;
   flex-shrink: 0;
@@ -277,7 +277,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #00a3a3 0%, #8b5cf6 100%);
   color: white;
   border-radius: 9999px;
   font-size: 0.875rem;
@@ -362,7 +362,7 @@
 }
 
 .permission-option:hover {
-  border-color: #3b82f6;
+  border-color: #00a3a3;
   background-color: #f9fafb;
 }
 
@@ -372,7 +372,7 @@
 }
 
 .permission-option input[type="radio"]:checked ~ .permission-content {
-  color: #3b82f6;
+  color: #00a3a3;
 }
 
 .permission-content {
@@ -427,7 +427,7 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #00a3a3 0%, #8b5cf6 100%);
   color: white;
 }
 
@@ -469,3 +469,4 @@
     width: 100%;
   }
 }
+

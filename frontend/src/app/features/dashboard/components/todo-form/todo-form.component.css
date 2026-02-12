@@ -51,7 +51,7 @@
 
 .form-control:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #00a3a3;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -113,12 +113,12 @@ textarea.form-control {
 }
 
 .btn-primary {
-  background-color: #3b82f6;
+  background-color: #00a3a3;
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #2563eb;
+  background-color: #008080;
 }
 
 .btn-secondary {
@@ -156,3 +156,4 @@ textarea.form-control {
     font-size: 0.8125rem;
   }
 }
+

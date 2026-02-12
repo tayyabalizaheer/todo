@@ -22,6 +22,18 @@ export const routes: Routes = [
         loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
         canActivate: [authGuard],
         title: `Dashboard - ${environment.appName}`
+      },
+      {
+        path: 'dashboard/todo',
+        loadComponent: () => import('./features/dashboard/pages/todo/todo.component').then(m => m.TodoComponent),
+        canActivate: [authGuard],
+        title: `My Todos - ${environment.appName}`
+      },
+      {
+        path: 'dashboard/blog',
+        loadComponent: () => import('./features/dashboard/pages/blog/blog.component').then(m => m.BlogComponent),
+        canActivate: [authGuard],
+        title: `Blog - ${environment.appName}`
       }
     ]
   },
