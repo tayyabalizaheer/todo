@@ -50,7 +50,10 @@ class TodoService
             $data['status'] = 'open';
         }
 
-        return $this->repository->create($data);
+        $todo = $this->repository->create($data);
+
+        // Add sharing info for consistency with other methods
+        return $this->addSharingInfo($todo, $userId);
     }
 
     public function updateTodo(int $id, array $data, int $userId): ?Todo

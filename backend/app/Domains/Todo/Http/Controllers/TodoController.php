@@ -51,7 +51,7 @@ class TodoController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Todo created successfully',
-            'data' => $todo,
+            'data' => new TodoResource($todo),
         ], 201);
     }
 
