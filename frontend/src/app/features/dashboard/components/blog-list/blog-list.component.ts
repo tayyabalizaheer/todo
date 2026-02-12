@@ -3,6 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Blog, BlogStatus } from '../../../../core/models/blog.model';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-blog-list',
@@ -36,30 +37,74 @@ export class BlogListComponent {
 
   onDeleteBlog(blogId: number, event: Event): void {
     event.stopPropagation();
-    if (confirm('Are you sure you want to delete this blog post? This action cannot be undone.')) {
-      this.blogDeleted.emit(blogId);
-    }
+    Swal.fire({
+      title: 'Delete Blog Post?',
+      text: 'Are you sure you want to delete this blog post? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.blogDeleted.emit(blogId);
+      }
+    });
   }
 
   onPublishBlog(blogId: number, event: Event): void {
     event.stopPropagation();
-    if (confirm('Publish this blog post?')) {
-      this.blogPublish.emit(blogId);
-    }
+    Swal.fire({
+      title: 'Publish Blog Post?',
+      text: 'This will make the blog post visible to everyone.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, publish it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.blogPublish.emit(blogId);
+      }
+    });
   }
 
   onUnpublishBlog(blogId: number, event: Event): void {
     event.stopPropagation();
-    if (confirm('Unpublish this blog post?')) {
-      this.blogUnpublish.emit(blogId);
-    }
+    Swal.fire({
+      title: 'Unpublish Blog Post?',
+      text: 'This will hide the blog post from public view.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, unpublish it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.blogUnpublish.emit(blogId);
+      }
+    });
   }
 
   onArchiveBlog(blogId: number, event: Event): void {
     event.stopPropagation();
-    if (confirm('Archive this blog post?')) {
-      this.blogArchive.emit(blogId);
-    }
+    Swal.fire({
+      title: 'Archive Blog Post?',
+      text: 'This will move the blog post to archived status.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, archive it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.blogArchive.emit(blogId);
+      }
+    });
   }
 
   getStatusClass(status: BlogStatus): string {

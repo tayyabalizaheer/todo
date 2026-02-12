@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { MatIconModule } from '@angular/material/icon';
 import { Subject } from 'rxjs';
 import { Blog, CreateBlogRequest, UpdateBlogRequest, BlogStatus } from '../../../../core/models/blog.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-blog-form',
@@ -97,14 +98,24 @@ export class BlogFormComponent implements OnInit, OnChanges, OnDestroy {
       
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        alert('Please select a valid image file');
+        Swal.fire({
+          icon: 'warning',
+          title: 'Invalid File',
+          text: 'Please select a valid image file',
+          confirmButtonColor: '#3085d6'
+        });
         return;
       }
 
       // Validate file size (max 5MB)
       const maxSize = 5 * 1024 * 1024; // 5MB in bytes
       if (file.size > maxSize) {
-        alert('File size must be less than 5MB');
+        Swal.fire({
+          icon: 'warning',
+          title: 'File Too Large',
+          text: 'File size must be less than 5MB',
+          confirmButtonColor: '#3085d6'
+        });
         return;
       }
 

@@ -7,6 +7,7 @@ import { Todo, CreateTodoRequest, UpdateTodoRequest, TodoCounts } from '../../..
 import { TodoModalComponent } from '../todo-modal/todo-modal.component';
 import { ShareTodoModalComponent } from '../share-todo-modal/share-todo-modal.component';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-todo-list',
@@ -162,23 +163,48 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   deleteTodo(todo: Todo): void {
-    if (!confirm(`Are you sure you want to delete "${todo.title}"?`)) {
-      return;
-    }
-
-    this.todoService.deleteTodo(todo.id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          const currentTodos = this.todosSubject$.value;
-          const newTodos = currentTodos.filter(t => t.id !== todo.id);
-          this.todosSubject$.next(newTodos);
-        },
-        error: (error) => {
-          console.error('Error deleting todo:', error);
-          this.errorSubject$.next(error.error?.message || 'Failed to delete todo');
-        }
-      });
+    Swal.fire({
+      title: 'Delete Todo?',
+      text: `Are you sure you want to delete "${todo.title}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.todoService.deleteTodo(todo.id)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              const currentTodos = this.todosSubject$.value;
+              const newTodos = currentTodos.filter(t => t.id !== todo.id);
+              this.todosSubject$.next(newTodos);
+              Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: 'Todo has been deleted.',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+              });
+            },
+            error: (error) => {
+              console.error('Error deleting todo:', error);
+              this.errorSubject$.next(error.error?.message || 'Failed to delete todo');
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.error?.message || 'Failed to delete todo',
+                confirmButtonColor: '#d33'
+              });
+            }
+          });
+      }
+    });
   }
 
   openCreateModal(): void {
@@ -284,16 +310,35 @@ export class TodoListComponent implements OnInit, OnDestroy {
           this.closeShareModal();
           
           if (response.errors && response.errors.length > 0) {
-            alert(`${response.message}\n\nFailed to share with:\n${response.errors.map((e: { email: string; message: string }) => `- ${e.email}: ${e.message}`).join('\n')}`);
+            Swal.fire({
+              icon: 'warning',
+              title: response.message,
+              html: `<div style="text-align: left;"><strong>Failed to share with:</strong><ul>${response.errors.map((e: { email: string; message: string }) => `<li>${e.email}: ${e.message}</li>`).join('')}</ul></div>`,
+              confirmButtonColor: '#3085d6'
+            });
           } else {
-            alert(response.message || 'Todo shared successfully!');
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: response.message || 'Todo shared successfully!',
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true
+            });
           }
         },
         error: (error) => {
           console.error('Error sharing todo:', error);
           this.errorSubject$.next(error.error?.message || 'Failed to share todo');
           this.isSubmittingShareSubject$.next(false);
-          alert(error.error?.message || 'Failed to share todo');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.error?.message || 'Failed to share todo',
+            confirmButtonColor: '#d33'
+          });
         }
       });
   }

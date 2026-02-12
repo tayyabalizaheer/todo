@@ -9,6 +9,7 @@ import { Blog, CreateBlogRequest, UpdateBlogRequest, BlogStatus } from '../../..
 import { BlogListComponent } from '../../components/blog-list/blog-list.component';
 import { BlogModalComponent } from '../../components/blog-modal/blog-modal.component';
 import { HttpErrorService } from '../../../../core/services/http-error.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-blog',
@@ -342,12 +343,25 @@ export class BlogComponent implements OnInit, OnDestroy {
   }
 
   private showSuccess(message: string): void {
-    // Simple alert for now - could be replaced with a toast notification service
-    alert(message);
+    Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: message,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true
+    });
   }
 
   private showError(message: string): void {
-    alert('Error: ' + message);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: message,
+      confirmButtonColor: '#d33'
+    });
     this.errorSubject$.next(message);
   }
 }
