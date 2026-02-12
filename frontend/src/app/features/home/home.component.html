@@ -25,7 +25,9 @@
     <div class="features-grid">
       @for (feature of features; track feature.title) {
         <div class="feature-card">
-          <div class="feature-icon">{{ feature.icon }}</div>
+          <div class="feature-icon">
+            <mat-icon>{{ feature.icon }}</mat-icon>
+          </div>
           <h3 class="feature-title">{{ feature.title }}</h3>
           <p class="feature-description">{{ feature.description }}</p>
         </div>
@@ -42,7 +44,7 @@
     <div class="benefits-list">
       @for (benefit of benefits; track benefit) {
         <div class="benefit-item">
-          <span class="benefit-icon">✓</span>
+          <mat-icon class="benefit-icon">check_circle</mat-icon>
           <span class="benefit-text">{{ benefit }}</span>
         </div>
       }

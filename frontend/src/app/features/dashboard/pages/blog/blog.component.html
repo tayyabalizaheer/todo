@@ -44,6 +44,20 @@
       </select>
     </div>
 
+    <div class="filter-group">
+      <label for="per-page-filter" class="filter-label">Show:</label>
+      <select 
+        id="per-page-filter"
+        [(ngModel)]="perPage"
+        (change)="onPerPageChange()"
+        class="filter-select"
+      >
+        @for (option of perPageOptions; track option) {
+          <option [value]="option">{{ option }}</option>
+        }
+      </select>
+    </div>
+
     @if ((isLoading$ | async) === false) {
       <div class="results-info">
         <span class="results-count">

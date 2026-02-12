@@ -26,7 +26,8 @@ export class BlogListComponent implements OnInit, OnDestroy {
   currentPage = 1;
   totalPages = 1;
   totalBlogs = 0;
-  perPage = 12;
+  perPage = 20;
+  perPageOptions = [5, 10, 20, 50, 100];
   
   private destroy$ = new Subject<void>();
   private searchSubject$ = new Subject<string>();
@@ -101,6 +102,11 @@ export class BlogListComponent implements OnInit, OnDestroy {
 
   onSearchChange(): void {
     this.searchSubject$.next(this.searchTerm);
+  }
+
+  onPerPageChange(): void {
+    this.currentPage = 1;
+    this.loadBlogs();
   }
 
   viewBlog(slug: string): void {

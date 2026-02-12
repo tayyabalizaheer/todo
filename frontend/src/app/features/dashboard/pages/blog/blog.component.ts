@@ -36,7 +36,8 @@ export class BlogComponent implements OnInit, OnDestroy {
   currentPage = 1;
   totalPages = 1;
   totalBlogs = 0;
-  perPage = 12;
+  perPage = 20;
+  perPageOptions = [5, 10, 20, 50, 100];
   
   // Modal state
   isModalOpen = false;
@@ -178,6 +179,11 @@ export class BlogComponent implements OnInit, OnDestroy {
   }
 
   onFilterChange(): void {
+    this.currentPage = 1;
+    this.loadBlogs();
+  }
+
+  onPerPageChange(): void {
     this.currentPage = 1;
     this.loadBlogs();
   }

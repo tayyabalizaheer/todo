@@ -19,6 +19,19 @@
       />
       <mat-icon class="search-icon">search</mat-icon>
     </div>
+    <div class="per-page-select">
+      <label for="per-page" class="per-page-label">Show:</label>
+      <select 
+        id="per-page"
+        [(ngModel)]="perPage"
+        (change)="onPerPageChange()"
+        class="per-page-dropdown"
+      >
+        @for (option of perPageOptions; track option) {
+          <option [value]="option">{{ option }}</option>
+        }
+      </select>
+    </div>
   </div>
 
   <!-- Loading State -->

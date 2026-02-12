@@ -38,6 +38,8 @@ export class TodoListComponent implements OnInit, OnDestroy {
   
   searchQuery = '';
   filterStatus: 'all' | 'active' | 'completed' = 'all';
+  perPage = 20;
+  perPageOptions = [5, 10, 20, 50, 100];
   isModalOpen = false;
   editingTodo?: Todo;
   
@@ -80,7 +82,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
     this.isLoadingSubject$.next(true);
     this.errorSubject$.next(null);
 
-    const params: Record<string, number | string> = { per_page: 100 };
+    const params: Record<string, number | string> = { per_page: this.perPage };
 
     if (this.filterStatus === 'active') {
       params['status'] = 'open';
@@ -124,6 +126,10 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   onFilterChange(status: 'all' | 'active' | 'completed'): void {
     this.filterStatus = status;
+    this.loadTodos();
+  }
+
+  onPerPageChange(): void {
     this.loadTodos();
   }
 
