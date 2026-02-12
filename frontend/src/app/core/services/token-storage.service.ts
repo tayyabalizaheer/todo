@@ -29,17 +29,34 @@ export class TokenStorageService {
   getToken(): string | null {
     if (!this.isBrowser) return null;
     
-    return localStorage.getItem(this.TOKEN_KEY);
+    try {
+      return localStorage.getItem(this.TOKEN_KEY);
+    } catch (error) {
+      console.error('Error accessing localStorage:', error);
+      return null;
+    }
   }
 
 
   removeToken(): void {
     if (!this.isBrowser) return;
     
-    localStorage.removeItem(this.TOKEN_KEY);
+    try {
+      localStorage.removeItem(this.TOKEN_KEY);
+    } catch (error) {
+      console.error('Error removing token from localStorage:', error);
+    }
   }
 
   hasToken(): boolean {
-    return !!this.getToken();
+    if (!this.isBrowser) return false;
+    
+    try {
+      const token = this.getToken();
+      return !!token && token.length > 0;
+    } catch (error) {
+      console.error('Error checking token:', error);
+      return false;
+    }
   }
 }

@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { AuthApiService } from './auth.api';
 import { TokenStorageService } from '../../../core/services/token-storage.service';
+import { AuthStateService } from '../../../core/services/auth-state.service';
 import { HttpErrorService } from '../../../core/services/http-error.service';
 import { LoginRequest, RegisterRequest, AuthState } from '../models/auth.model';
 import { User } from '../../../core/models/api.model';
@@ -31,6 +32,7 @@ export class AuthFacade {
   constructor(
     private authApi: AuthApiService,
     private tokenStorage: TokenStorageService,
+    private authStateService: AuthStateService,
     private httpErrorService: HttpErrorService
   ) {
     this.initializeAuthState();
@@ -59,6 +61,9 @@ export class AuthFacade {
         tap(response => {
           // Store token
           this.tokenStorage.setToken(response.access_token);
+          
+          // Update centralized auth state
+          this.authStateService.setAuthenticated(true);
 
           // Update state
           this.updateState({
@@ -97,6 +102,9 @@ export class AuthFacade {
       this.authApi.register(data).pipe(
         tap(response => {
           this.tokenStorage.setToken(response.access_token);
+          
+          // Update centralized auth state
+          this.authStateService.setAuthenticated(true);
 
           this.updateState({
             user: response.user || null,
@@ -131,6 +139,9 @@ export class AuthFacade {
     this.authApi.logout().subscribe();
 
     this.tokenStorage.removeToken();
+    
+    // Update centralized auth state
+    this.authStateService.setAuthenticated(false);
 
     this.updateState({
       user: null,
