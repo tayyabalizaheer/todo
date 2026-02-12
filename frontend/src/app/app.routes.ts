@@ -18,6 +18,16 @@ export const routes: Routes = [
         title: `Home - ${environment.appName}`
       },
       {
+        path: 'blog',
+        loadComponent: () => import('./features/blog/blog-list/blog-list.component').then(m => m.BlogListComponent),
+        title: `Blog - ${environment.appName}`
+      },
+      {
+        path: 'blog/:slug',
+        loadComponent: () => import('./features/blog/blog-detail/blog-detail.component').then(m => m.BlogDetailComponent),
+        title: `Blog Post - ${environment.appName}`
+      },
+      {
         path: 'dashboard',
         loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
         canActivate: [authGuard],
@@ -33,7 +43,7 @@ export const routes: Routes = [
         path: 'dashboard/blog',
         loadComponent: () => import('./features/dashboard/pages/blog/blog.component').then(m => m.BlogComponent),
         canActivate: [authGuard],
-        title: `Blog - ${environment.appName}`
+        title: `Blog Management - ${environment.appName}`
       }
     ]
   },
